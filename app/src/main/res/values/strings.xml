@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Thekenapp</string>
+    <string name="list_heading">Liste</string>
+    <string name="settings_heading">Einstellungen</string>
+
+    <string name="drinks_label">Getränke</string>
+    <string name="plus_sign">+</string>
+    <string name="minus_sign">-</string>
+    <string name="customer_label">Kunden</string>
+    <string name="event_label">Veranstaltung</string>
+</resources>
