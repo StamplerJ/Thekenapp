@@ -1,22 +1,35 @@
 package com.jann_luellmann.thekenapp;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
+import com.jann_luellmann.thekenapp.data.db.Database;
+import com.jann_luellmann.thekenapp.data.model.Customer;
+import com.jann_luellmann.thekenapp.data.model.Drink;
+import com.jann_luellmann.thekenapp.data.repository.CustomerRepository;
+import com.jann_luellmann.thekenapp.data.repository.DrinkRepository;
+import com.jann_luellmann.thekenapp.view.CustomerRow;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class ListFragment extends Fragment {
 
     private OnFragmentInteractionListener listener;
 
-    public ListFragment() {
-        // Required empty public constructor
-    }
+    private TableLayout tableLayout;
+    private TableRow tableRowPrefab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,7 +38,37 @@ public class ListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        tableLayout = view.findViewById(R.id.tableLayout);
+        tableRowPrefab = (TableRow) getLayoutInflater().inflate(R.layout.tablerow, null);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        new CustomerRepository().findAll().observe(this, customers -> {
+            for (Customer customer : customers) {
+                CustomerRow row = new CustomerRow(getContext());
+                row.setText(customer.getName());
+                tableLayout.addView(row);
+            }
+        });
+
+        new DrinkRepository().findAll().observe(this, drinks -> {
+            for (int i = 0; i < tableLayout.getChildCount(); i++) {
+                View v = tableLayout.getChildAt(i);
+                if(v instanceof CustomerRow) {
+                    CustomerRow row = (CustomerRow) v;
+                    for (Drink drink : drinks) {
+                        TextView textView = new TextView(getContext());
+                        textView.setText(drink.getName());
+                        row.addView(textView);
+                    }
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
