@@ -1,5 +1,6 @@
 package com.jann_luellmann.thekenapp.data.dao.relationship;
 
+import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface EventWithCustomersDAO {
     @Transaction
     @Query("SELECT * FROM event")
     LiveData<List<EventWithCustomers>> getEventWithCustomers();
+
+    @Transaction
+    @Query("SELECT * FROM event WHERE name LIKE :name LIMIT 1")
+    LiveData<EventWithCustomers> findByName(String name);
 }

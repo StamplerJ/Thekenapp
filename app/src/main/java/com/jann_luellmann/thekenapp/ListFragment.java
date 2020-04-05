@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.jann_luellmann.thekenapp.data.db.Database;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 import com.jann_luellmann.thekenapp.data.repository.CustomerRepository;
 import com.jann_luellmann.thekenapp.data.repository.DrinkRepository;
+import com.jann_luellmann.thekenapp.data.repository.relationship.EventWithCustomersRepository;
 import com.jann_luellmann.thekenapp.view.CustomerRow;
 
 import androidx.annotation.NonNull;
@@ -48,8 +50,8 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new CustomerRepository().findAll().observe(this, customers -> {
-            for (Customer customer : customers) {
+        new EventWithCustomersRepository().findByName("Schützenfest").observe(this, eventWithCustomers -> {
+            for (Customer customer : eventWithCustomers.getCustomers()) {
                 CustomerRow row = new CustomerRow(getContext());
                 row.setText(customer.getName());
                 tableLayout.addView(row);

@@ -7,14 +7,18 @@ import java.util.List;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class EventWithCustomers {
     @Embedded
-    public Event event;
+    private Event event;
 
     @Relation(
             parentColumn = "id",
             entityColumn = "eventId"
     )
-    public List<Customer> customers;
+    private List<Customer> customers;
 }

@@ -88,6 +88,10 @@ public class Database {
                             new Drink(3L, "Cola, Fanta, Sprite", 120),
                             new Drink(4L, "Charly, Cola-Korn", 250),
                             new Drink(5L, "Hugo", 200));
+
+                    getInstance().boughtDAO().insertAll(
+                            new Bought()
+                    );
                 }
             });
         });
