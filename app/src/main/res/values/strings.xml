@@ -7,5 +7,9 @@
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
     <string name="customer_label">Kunden</string>
-    <string name="event_label">Veranstaltung</string>
+    <string name="event_label">Veranstaltungen</string>
+    <string name="edit_icon">Edit icon</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
 </resources>

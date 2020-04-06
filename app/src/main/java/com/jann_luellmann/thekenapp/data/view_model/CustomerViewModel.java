@@ -1,4 +1,4 @@
-package com.jann_luellmann.thekenapp.data.repository;
+package com.jann_luellmann.thekenapp.data.view_model;
 
 import com.jann_luellmann.thekenapp.data.model.Customer;
 
@@ -6,8 +6,12 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class CustomerRepository extends BaseRepository {
-    
+public class CustomerViewModel extends BaseViewModel {
+
+    public CustomerViewModel() {
+        super();
+    }
+
     public void insert(Customer customer) {
         executor.execute(() -> db.customerDAO().insertAll(customer));
     }

@@ -2,22 +2,17 @@ package com.jann_luellmann.thekenapp;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.jann_luellmann.thekenapp.data.db.Database;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
-import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
-import com.jann_luellmann.thekenapp.data.repository.CustomerRepository;
-import com.jann_luellmann.thekenapp.data.repository.DrinkRepository;
-import com.jann_luellmann.thekenapp.data.repository.relationship.EventWithCustomersRepository;
+import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
+import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithCustomersViewModel;
 import com.jann_luellmann.thekenapp.view.CustomerRow;
 
 import androidx.annotation.NonNull;
@@ -50,7 +45,7 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new EventWithCustomersRepository().findByName("Schützenfest").observe(this, eventWithCustomers -> {
+        new EventWithCustomersViewModel().findByName("Schützenfest").observe(this, eventWithCustomers -> {
             for (Customer customer : eventWithCustomers.getCustomers()) {
                 CustomerRow row = new CustomerRow(getContext());
                 row.setText(customer.getName());
@@ -58,7 +53,7 @@ public class ListFragment extends Fragment {
             }
         });
 
-        new DrinkRepository().findAll().observe(this, drinks -> {
+        new DrinkViewModel().findAll().observe(this, drinks -> {
             for (int i = 0; i < tableLayout.getChildCount(); i++) {
                 View v = tableLayout.getChildAt(i);
                 if(v instanceof CustomerRow) {

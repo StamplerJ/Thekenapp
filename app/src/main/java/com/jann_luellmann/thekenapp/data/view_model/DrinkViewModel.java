@@ -1,13 +1,16 @@
-package com.jann_luellmann.thekenapp.data.repository;
+package com.jann_luellmann.thekenapp.data.view_model;
 
-import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class DrinkRepository extends BaseRepository {
+public class DrinkViewModel extends BaseViewModel {
+
+    public DrinkViewModel() {
+        super();
+    }
 
     public void insert(Drink drink) {
         executor.execute(() -> db.drinkDAO().insertAll(drink));

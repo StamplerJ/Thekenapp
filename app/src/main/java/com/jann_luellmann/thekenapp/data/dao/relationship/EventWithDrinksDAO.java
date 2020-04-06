@@ -1,7 +1,7 @@
 package com.jann_luellmann.thekenapp.data.dao.relationship;
 
-import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinks;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 @Dao
-public interface EventWithCustomersDAO {
+public interface EventWithDrinksDAO {
 
     @Transaction
     @Query("SELECT * FROM event")
-    LiveData<List<EventWithCustomers>> getAll();
+    LiveData<List<EventWithDrinks>> getAll();
 
     @Transaction
     @Query("SELECT * FROM event WHERE name LIKE :name LIMIT 1")
-    LiveData<EventWithCustomers> findByName(String name);
+    LiveData<EventWithDrinks> findByName(String name);
 }

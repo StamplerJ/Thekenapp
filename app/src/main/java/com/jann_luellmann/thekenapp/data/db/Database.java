@@ -1,7 +1,6 @@
 package com.jann_luellmann.thekenapp.data.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.jann_luellmann.thekenapp.data.dao.BoughtDAO;
 import com.jann_luellmann.thekenapp.data.dao.CustomerDAO;
@@ -9,26 +8,20 @@ import com.jann_luellmann.thekenapp.data.dao.DrinkDAO;
 import com.jann_luellmann.thekenapp.data.dao.EventDAO;
 import com.jann_luellmann.thekenapp.data.dao.SoldDAO;
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithCustomersDAO;
+import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithDrinksDAO;
 import com.jann_luellmann.thekenapp.data.model.Bought;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.Event;
 import com.jann_luellmann.thekenapp.data.model.Sold;
-import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 import com.jann_luellmann.thekenapp.data.util.Converters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 public class Database {
 
@@ -43,6 +36,7 @@ public class Database {
 
         // Relationship DAOs
         public abstract EventWithCustomersDAO eventWithCustomersDAO();
+        public abstract EventWithDrinksDAO eventWithDrinksDAO();
     }
 
     private static AppDatabase instance;
@@ -83,15 +77,11 @@ public class Database {
                             new Customer(5L, "Marc Müller", 1L));
 
                     getInstance().drinkDAO().insertAll(
-                            new Drink(1L, "Wasser", 100),
-                            new Drink(2L, "Bier, Alster", 150),
-                            new Drink(3L, "Cola, Fanta, Sprite", 120),
-                            new Drink(4L, "Charly, Cola-Korn", 250),
-                            new Drink(5L, "Hugo", 200));
-
-                    getInstance().boughtDAO().insertAll(
-                            new Bought()
-                    );
+                            new Drink(1L, "Wasser", 100, 1l),
+                            new Drink(2L, "Bier, Alster", 150, 1l),
+                            new Drink(3L, "Cola, Fanta, Sprite", 120, 1l),
+                            new Drink(4L, "Charly, Cola-Korn", 250, 1l),
+                            new Drink(5L, "Hugo", 200, 1l));
                 }
             });
         });

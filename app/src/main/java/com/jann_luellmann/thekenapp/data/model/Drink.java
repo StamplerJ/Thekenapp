@@ -1,5 +1,8 @@
 package com.jann_luellmann.thekenapp.data.model;
 
+import java.math.BigDecimal;
+
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -8,14 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 public class Drink {
 
@@ -26,5 +27,17 @@ public class Drink {
     private String name;
 
     @ColumnInfo(name = "price")
-    private int price;
+    private long price;
+
+    private long eventId;
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name + ": " + priceAsText();
+    }
+
+    private String priceAsText() {
+        return new BigDecimal(price).movePointLeft(2).toString() + " €";
+    }
 }

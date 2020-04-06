@@ -35,7 +35,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/drinks_list"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/drinks_heading"
@@ -52,15 +52,6 @@
                 app:layout_constraintStart_toStartOf="@+id/drinks_list"
                 app:layout_constraintTop_toBottomOf="@+id/drinks_list" />
 
-            <Button
-                android:id="@+id/remove_drink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/minus_sign"
-                app:layout_constraintEnd_toEndOf="@+id/add_drink"
-                app:layout_constraintStart_toStartOf="@+id/add_drink"
-                app:layout_constraintTop_toBottomOf="@+id/add_drink" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,7 +82,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/customer_list"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/customer_heading"
@@ -108,15 +99,6 @@
                 app:layout_constraintStart_toStartOf="@+id/customer_list"
                 app:layout_constraintTop_toBottomOf="@+id/customer_list" />
 
-            <Button
-                android:id="@+id/remove_customer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/minus_sign"
-                app:layout_constraintEnd_toEndOf="@+id/customer_list"
-                app:layout_constraintStart_toStartOf="@+id/customer_list"
-                app:layout_constraintTop_toBottomOf="@+id/add_customer" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +126,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/event_list"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/event_heading"
@@ -161,15 +143,6 @@
                 app:layout_constraintStart_toStartOf="@+id/event_list"
                 app:layout_constraintTop_toBottomOf="@+id/event_list" />
 
-            <Button
-                android:id="@+id/remove_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/minus_sign"
-                app:layout_constraintEnd_toEndOf="@+id/event_list"
-                app:layout_constraintStart_toStartOf="@+id/event_list"
-                app:layout_constraintTop_toBottomOf="@+id/add_event" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,11 +5,6 @@ import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 import com.jann_luellmann.thekenapp.data.db.Database;
-import com.jann_luellmann.thekenapp.data.model.Drink;
-import com.jann_luellmann.thekenapp.data.repository.DrinkRepository;
-
-import java.util.List;
-import java.util.UUID;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
