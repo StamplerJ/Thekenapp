@@ -7,35 +7,41 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jann_luellmann.thekenapp.R;
+import com.jann_luellmann.thekenapp.dialog.EditEntryDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
     private List<T> data;
+    private FragmentManager fragmentManager;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder<T> extends RecyclerView.ViewHolder {
 
+        T item;
         TextView textView;
         ImageButton imageButton;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             textView = v.findViewById(R.id.textView);
             imageButton = v.findViewById(R.id.imageButton);
+        }
+
+        void updateData(T item, FragmentManager fragmentManager) {
+            this.item = item;
+            textView.setText(item.toString());
+            imageButton.setOnClickListener(view -> new EditEntryDialogFragment(item).show(fragmentManager, ""));
         }
     }
 
     public TextAdapter() {
         this.data = new ArrayList<T>();
-    }
-
-    public TextAdapter(List<T> data) {
-        this.data = data;
     }
 
     @NonNull
@@ -45,14 +51,15 @@ public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder>
         return new TextAdapter.ViewHolder(v);
     }
 
-    public void setData(List<T> newData) {
+    public void setData(List<T> newData, FragmentManager fragmentManager) {
         this.data = newData;
+        this.fragmentManager = fragmentManager;
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(@NonNull TextAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(data.get(position).toString());
+        holder.updateData(data.get(position), fragmentManager);
     }
 
     @Override

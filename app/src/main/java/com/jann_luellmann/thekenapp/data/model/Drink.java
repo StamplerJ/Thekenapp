@@ -1,5 +1,7 @@
 package com.jann_luellmann.thekenapp.data.model;
 
+import com.jann_luellmann.thekenapp.data.util.Editable;
+
 import java.math.BigDecimal;
 
 import androidx.annotation.NonNull;
@@ -24,9 +26,11 @@ public class Drink {
     private long id;
 
     @ColumnInfo(name = "name")
+    @Editable
     private String name;
 
     @ColumnInfo(name = "price")
+    @Editable
     private long price;
 
     private long eventId;

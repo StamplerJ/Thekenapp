@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.jann_luellmann.thekenapp.adapter.TextAdapter;
 import com.jann_luellmann.thekenapp.data.model.Customer;
@@ -24,6 +26,9 @@ import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.CustomerViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
+import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding;
+import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding;
+import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment;
 
 import java.util.List;
 
@@ -31,6 +36,8 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
 
     private OnFragmentInteractionListener listener;
+    private FragmentManager fragmentManager;
+    private FragmentSettingsBinding binding;
 
     private DrinkViewModel drinkViewModel;
     private CustomerViewModel customerViewModel;
@@ -43,27 +50,33 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fragmentManager = getFragmentManager();
+
+        // Drink setup
         drinkViewModel = ViewModelProviders.of(this).get(DrinkViewModel.class);
-        generateRecyclerView(view, R.id.drinks_list, Drink.class, drinkViewModel);
+        generateRecyclerView(view, binding.drinksList, Drink.class, drinkViewModel);
+        binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink()).show(fragmentManager, getString(R.string.drink_tag)));
 
+        // Customer setup
         customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
-        generateRecyclerView(view, R.id.customer_list, Customer.class, customerViewModel);
+        generateRecyclerView(view, binding.customerList, Customer.class, customerViewModel);
+        binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer()).show(fragmentManager, getString(R.string.customer_tag)));
 
+        // Event setup
         eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
-        generateRecyclerView(view, R.id.event_list, Event.class, eventViewModel);
-
+        generateRecyclerView(view, binding.eventList, Event.class, eventViewModel);
+        binding.addEvent.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Event()).show(fragmentManager, getString(R.string.event_tag)));
     }
 
-    private <clazz> void generateRecyclerView(View view, int layoutId, Class clazz, BaseViewModel viewModel) {
-
-        RecyclerView recyclerView = view.findViewById(layoutId);
+    private <clazz> void generateRecyclerView(View view, RecyclerView recyclerView, Class clazz, BaseViewModel viewModel) {
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -72,7 +85,7 @@ public class SettingsFragment extends Fragment {
         TextAdapter<clazz> adapter = new TextAdapter<>();
         recyclerView.setAdapter(adapter);
 
-        viewModel.findAll().observe(this, items -> adapter.setData((List<clazz>) items));
+        viewModel.findAll().observe(this, items -> adapter.setData((List<clazz>) items, fragmentManager));
     }
 
     @Override

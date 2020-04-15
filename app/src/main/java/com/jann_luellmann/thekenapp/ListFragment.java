@@ -46,6 +46,9 @@ public class ListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         new EventWithCustomersViewModel().findByName("Schützenfest").observe(this, eventWithCustomers -> {
+            if(eventWithCustomers == null)
+                return;
+
             for (Customer customer : eventWithCustomers.getCustomers()) {
                 CustomerRow row = new CustomerRow(getContext());
                 row.setText(customer.getName());

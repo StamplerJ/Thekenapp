@@ -12,4 +12,10 @@
     <string name="edit">Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
+    <string name="edit_title">Ändern</string>
+    <string name="label_for_the_edittext">Label for the EditText</string>
+    <string name="create_title">Erstellen</string>
+    <string name="drink_tag">DRINK</string>
+    <string name="customer_tag">CUSTOMER</string>
+    <string name="event_tag">EVENT</string>
 </resources>

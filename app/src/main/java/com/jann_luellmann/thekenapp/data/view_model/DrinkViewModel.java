@@ -20,6 +20,10 @@ public class DrinkViewModel extends BaseViewModel {
         executor.execute(() -> db.drinkDAO().insertAll(drinks.toArray(new Drink[0])));
     }
 
+    public void update(Drink drink) {
+        executor.execute(() -> db.drinkDAO().update(drink));
+    }
+
     public LiveData<List<Drink>> findAll() {
         return db.drinkDAO().getAll();
     }

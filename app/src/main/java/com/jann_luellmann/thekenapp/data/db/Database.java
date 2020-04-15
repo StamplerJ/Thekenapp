@@ -74,7 +74,7 @@ public class Database {
                             new Customer(2L, "Joachim Sander", 1L),
                             new Customer(3L, "Jann Lüllmann", 1L),
                             new Customer(4L, "Malte Sander", 1L),
-                            new Customer(5L, "Marc Müller", 1L));
+                            new Customer(5L, "Marie Lindemann", 1L));
 
                     getInstance().drinkDAO().insertAll(
                             new Drink(1L, "Wasser", 100, 1l),

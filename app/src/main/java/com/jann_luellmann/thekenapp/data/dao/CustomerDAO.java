@@ -9,6 +9,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public interface CustomerDAO {
@@ -24,6 +25,9 @@ public interface CustomerDAO {
 
     @Insert
     void insertAll(Customer... customers);
+
+    @Update
+    void update(Customer customer);
 
     @Delete
     void delete(Customer customer);

@@ -20,6 +20,10 @@ public class CustomerViewModel extends BaseViewModel {
         executor.execute(() -> db.customerDAO().insertAll(customers.toArray(new Customer[0])));
     }
 
+    public void update(Customer customer) {
+        executor.execute(() -> db.customerDAO().update(customer));
+    }
+
     public LiveData<List<Customer>> findAll() {
         return db.customerDAO().getAll();
     }

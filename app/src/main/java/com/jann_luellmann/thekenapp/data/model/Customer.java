@@ -1,5 +1,7 @@
 package com.jann_luellmann.thekenapp.data.model;
 
+import com.jann_luellmann.thekenapp.data.util.Editable;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -22,6 +24,7 @@ public class Customer {
     private long id;
 
     @ColumnInfo(name = "name")
+    @Editable
     private String name;
 
     private long eventId;

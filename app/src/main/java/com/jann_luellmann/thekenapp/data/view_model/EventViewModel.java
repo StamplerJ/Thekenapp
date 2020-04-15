@@ -20,6 +20,10 @@ public class EventViewModel extends BaseViewModel {
         executor.execute(() -> db.eventDAO().insertAll(events.toArray(new Event[0])));
     }
 
+    public void update(Event event) {
+        executor.execute(() -> db.eventDAO().update(event));
+    }
+
     public LiveData<List<Event>> findAll() {
         return db.eventDAO().getAll();
     }
