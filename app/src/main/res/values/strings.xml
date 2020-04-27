@@ -18,4 +18,9 @@
     <string name="drink_tag">DRINK</string>
     <string name="customer_tag">CUSTOMER</string>
     <string name="event_tag">EVENT</string>
+
+    <!-- Editable names -->
+    <string name="name">Name</string>
+    <string name="date">Datum</string>
+    <string name="price">Preis</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.jann_luellmann.thekenapp.data.model;
 
+import com.jann_luellmann.thekenapp.R;
 import com.jann_luellmann.thekenapp.data.util.Editable;
 
 import java.text.DateFormat;
@@ -30,11 +31,11 @@ public class Event {
     private long id;
 
     @ColumnInfo(name = "name")
-    @Editable
+    @Editable(stringId = R.string.name)
     private String name;
 
     @ColumnInfo(name = "date")
-    @Editable
+    @Editable(stringId = R.string.date)
     private Date date;
 
     @ColumnInfo(name = "total")

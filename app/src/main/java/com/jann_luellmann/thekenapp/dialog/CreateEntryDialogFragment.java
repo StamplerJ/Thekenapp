@@ -96,7 +96,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
     }
 
     private void attach(TextView textView, View valueView, Field field) {
-        textView.setText(TextUtil.FirstLetterUpperCase(field.getName()));
+        textView.setText(getString(field.getAnnotation(Editable.class).stringId()));
 
         // Handle Date EditText
         if(field.getType() == Date.class && valueView instanceof EditText) {

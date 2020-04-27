@@ -1,5 +1,6 @@
 package com.jann_luellmann.thekenapp.data.model;
 
+import com.jann_luellmann.thekenapp.R;
 import com.jann_luellmann.thekenapp.data.util.Editable;
 
 import java.math.BigDecimal;
@@ -26,11 +27,11 @@ public class Drink {
     private long id;
 
     @ColumnInfo(name = "name")
-    @Editable
+    @Editable(stringId = R.string.name)
     private String name;
 
     @ColumnInfo(name = "price")
-    @Editable
+    @Editable(stringId = R.string.price)
     private long price;
 
     private long eventId;

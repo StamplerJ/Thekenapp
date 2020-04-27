@@ -95,7 +95,7 @@ public class EditEntryDialogFragment extends DialogFragment {
     }
 
     private void attach(TextView textView, View valueView, Field field) {
-        textView.setText(TextUtil.FirstLetterUpperCase(field.getName()));
+        textView.setText(getString(field.getAnnotation(Editable.class).stringId()));
         try {
             if(valueView instanceof EditText) {
                 EditText editText = (EditText) valueView;
