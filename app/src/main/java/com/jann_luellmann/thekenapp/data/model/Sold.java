@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 public class Sold {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo(name = "amount")

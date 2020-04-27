@@ -1,10 +1,10 @@
 package com.jann_luellmann.thekenapp.dialog;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +18,7 @@ import com.jann_luellmann.thekenapp.data.view_model.CustomerViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryDateBinding;
+import com.jann_luellmann.thekenapp.databinding.DialogEntryEdittextBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryMoneyBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding;
 import com.jann_luellmann.thekenapp.util.TextUtil;
@@ -52,6 +53,11 @@ public class EditEntryDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        getDialog().getWindow().setLayout((int) (width * 0.8f), (int) (height * 0.8f));
+
         binding.title.setText(getContext().getString(R.string.create_title));
 
         for (View v : generateInputs(item))
@@ -68,7 +74,7 @@ public class EditEntryDialogFragment extends DialogFragment {
         for(Field field : fields) {
             if (field.isAnnotationPresent(Editable.class)) {
                 if (field.getType() == String.class) {
-                    com.jann_luellmann.thekenapp.databinding.DialogEntryEdittextBinding binding = com.jann_luellmann.thekenapp.databinding.DialogEntryEdittextBinding.inflate(getLayoutInflater());
+                    DialogEntryEdittextBinding binding = DialogEntryEdittextBinding.inflate(getLayoutInflater());
                     attach(binding.textView, binding.editText, field);
                     views.add(binding.getRoot());
                 }
@@ -79,7 +85,7 @@ public class EditEntryDialogFragment extends DialogFragment {
                 }
                 else if (field.getType() == Date.class) {
                     DialogEntryDateBinding binding = DialogEntryDateBinding.inflate(getLayoutInflater());
-                    attach(binding.textView, binding.calendarView, field);
+                    attach(binding.textView, binding.editText, field);
                     views.add(binding.getRoot());
                 }
             }
@@ -94,11 +100,18 @@ public class EditEntryDialogFragment extends DialogFragment {
             if(valueView instanceof EditText) {
                 EditText editText = (EditText) valueView;
                 field.setAccessible(true);
-                editText.setText(field.get(item).toString());
-            }
-            else if(valueView instanceof CalendarView) {
-                CalendarView calendarView = (CalendarView) valueView;
-                calendarView.setDate(((Event) item).getDate().getTime());
+                String text = field.get(item).toString();
+
+                // Handle Date EditText
+                if(field.getType() == Date.class) {
+                    text = TextUtil.dateToString((Date) field.get(item));
+                    editText.setOnClickListener(view -> {
+                        DatePickerFragment datePickerFragment = new DatePickerFragment(editText);
+                        datePickerFragment.show(getFragmentManager(), "datePicker");
+                    });
+                }
+
+                editText.setText(text);
             }
         } catch (IllegalAccessException e){
             e.printStackTrace();
@@ -147,7 +160,7 @@ public class EditEntryDialogFragment extends DialogFragment {
                         event.setName(TextUtil.FirstLetterUpperCase(name));
                         break;
                     case "date":
-                        Date date = new Date(((CalendarView) entry.getValue()).getDate());
+                        Date date = TextUtil.stringToDate(((EditText) entry.getValue()).getText().toString());
                         event.setDate(date);
                         break;
                 }
@@ -157,6 +170,17 @@ public class EditEntryDialogFragment extends DialogFragment {
         }
 
         dismiss();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getShowsDialog()) {
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int width = metrics.widthPixels;
+            int height = metrics.heightPixels;
+            getDialog().getWindow().setLayout((int) (width * 0.6f), ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     @Override

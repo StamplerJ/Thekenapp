@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 public class Customer {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo(name = "name")

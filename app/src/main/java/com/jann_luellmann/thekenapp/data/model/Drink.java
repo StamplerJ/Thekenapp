@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 public class Drink {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo(name = "name")

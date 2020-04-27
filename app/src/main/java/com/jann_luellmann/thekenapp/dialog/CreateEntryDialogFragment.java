@@ -1,6 +1,7 @@
 package com.jann_luellmann.thekenapp.dialog;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,11 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        getDialog().getWindow().setLayout((int) (width * 0.8f), (int) (height * 0.8f));
+
         binding = DialogFragmentEditEntryBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -80,7 +86,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
                 }
                 else if (field.getType() == Date.class) {
                     DialogEntryDateBinding binding = DialogEntryDateBinding.inflate(getLayoutInflater());
-                    attach(binding.textView, binding.calendarView, field);
+                    attach(binding.textView, binding.editText, field);
                     views.add(binding.getRoot());
                 }
             }
@@ -91,6 +97,16 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
 
     private void attach(TextView textView, View valueView, Field field) {
         textView.setText(TextUtil.FirstLetterUpperCase(field.getName()));
+
+        // Handle Date EditText
+        if(field.getType() == Date.class && valueView instanceof EditText) {
+            EditText editText = (EditText) valueView;
+            editText.setOnClickListener(view -> {
+                DatePickerFragment newFragment = new DatePickerFragment(editText);
+                newFragment.show(getFragmentManager(), "datePicker");
+            });
+        }
+
         entries.add(new Entry(field.getName(), valueView));
     }
 
@@ -135,7 +151,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
                         event.setName(TextUtil.FirstLetterUpperCase(name));
                         break;
                     case "date":
-                        Date date = new Date(((CalendarView) entry.getValue()).getDate());
+                        Date date = TextUtil.stringToDate(((EditText) entry.getValue()).getText().toString());
                         event.setDate(date);
                         break;
                 }
@@ -145,6 +161,17 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
         }
 
         dismiss();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getShowsDialog()) {
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int width = metrics.widthPixels;
+            int height = metrics.heightPixels;
+            getDialog().getWindow().setLayout((int) (width * 0.6f), ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     @Override
