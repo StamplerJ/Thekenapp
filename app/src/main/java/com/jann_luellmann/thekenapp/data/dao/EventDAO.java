@@ -14,7 +14,7 @@ import androidx.room.Update;
 @Dao
 public interface EventDAO {
 
-    @Query("SELECT * FROM event")
+    @Query("SELECT * FROM event ORDER BY date")
     LiveData<List<Event>> getAll();
 
     @Query("SELECT * FROM event WHERE id IN (:eventIds)")

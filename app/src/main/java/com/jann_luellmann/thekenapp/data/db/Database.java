@@ -8,6 +8,7 @@ import com.jann_luellmann.thekenapp.data.dao.DrinkDAO;
 import com.jann_luellmann.thekenapp.data.dao.EventDAO;
 import com.jann_luellmann.thekenapp.data.dao.SoldDAO;
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithCustomersDAO;
+import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithDrinksAndCustomersDAO;
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithDrinksDAO;
 import com.jann_luellmann.thekenapp.data.model.Bought;
 import com.jann_luellmann.thekenapp.data.model.Customer;
@@ -37,6 +38,8 @@ public class Database {
         // Relationship DAOs
         public abstract EventWithCustomersDAO eventWithCustomersDAO();
         public abstract EventWithDrinksDAO eventWithDrinksDAO();
+
+        public abstract EventWithDrinksAndCustomersDAO eventWithDrinksAndCustomersDAO();
     }
 
     private static AppDatabase instance;

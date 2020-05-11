@@ -11,9 +11,12 @@ import android.widget.TextView;
 
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers;
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithCustomersViewModel;
+import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
 import com.jann_luellmann.thekenapp.view.CustomerRow;
+import com.jann_luellmann.thekenapp.view.DrinkHeading;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,28 +48,22 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new EventWithCustomersViewModel().findByName("Schützenfest").observe(this, eventWithCustomers -> {
-            if(eventWithCustomers == null)
+        new EventWithDrinksAndCustomersViewModel().findByName("Schützenfest").observe(this, event -> {
+            if(event == null)
                 return;
 
-            for (Customer customer : eventWithCustomers.getCustomers()) {
+            DrinkHeading heading = new DrinkHeading(getContext(), event.getDrinks());
+            tableLayout.addView(heading);
+
+            for (Customer customer : event.getCustomers()) {
                 CustomerRow row = new CustomerRow(getContext());
                 row.setText(customer.getName());
-                tableLayout.addView(row);
-            }
-        });
-
-        new DrinkViewModel().findAll().observe(this, drinks -> {
-            for (int i = 0; i < tableLayout.getChildCount(); i++) {
-                View v = tableLayout.getChildAt(i);
-                if(v instanceof CustomerRow) {
-                    CustomerRow row = (CustomerRow) v;
-                    for (Drink drink : drinks) {
-                        TextView textView = new TextView(getContext());
-                        textView.setText(drink.getName());
-                        row.addView(textView);
-                    }
+                for (Drink drink : event.getDrinks()) {
+                    TextView textView = new TextView(getContext());
+                    textView.setText(drink.getName());
+                    row.addView(textView);
                 }
+                tableLayout.addView(row);
             }
         });
     }
