@@ -9,14 +9,22 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.evrencoskun.tableview.TableView;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers;
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithCustomersViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
+import com.jann_luellmann.thekenapp.view.Cell;
+import com.jann_luellmann.thekenapp.view.ColumnHeader;
 import com.jann_luellmann.thekenapp.view.CustomerRow;
 import com.jann_luellmann.thekenapp.view.DrinkHeading;
+import com.jann_luellmann.thekenapp.view.ListTableViewAdapter;
+import com.jann_luellmann.thekenapp.view.RowHeader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,8 +36,7 @@ public class ListFragment extends Fragment {
 
     private OnFragmentInteractionListener listener;
 
-    private TableLayout tableLayout;
-    private TableRow tableRowPrefab;
+    private TableView tableView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +46,7 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        tableLayout = view.findViewById(R.id.tableLayout);
-        tableRowPrefab = (TableRow) getLayoutInflater().inflate(R.layout.tablerow, null);
+        tableView = view.findViewById(R.id.tableView);
         return view;
     }
 
@@ -52,19 +58,30 @@ public class ListFragment extends Fragment {
             if(event == null)
                 return;
 
-            DrinkHeading heading = new DrinkHeading(getContext(), event.getDrinks());
-            tableLayout.addView(heading);
+            List<RowHeader> rowHeaderList = new ArrayList<>();
+            List<ColumnHeader> columnHeaderList = new ArrayList<>();
+            List<List<Cell>> cellList = new ArrayList<>();
+
+            for (Drink drink : event.getDrinks()) {
+                columnHeaderList.add(new ColumnHeader(drink));
+            }
 
             for (Customer customer : event.getCustomers()) {
-                CustomerRow row = new CustomerRow(getContext());
-                row.setText(customer.getName());
-                for (Drink drink : event.getDrinks()) {
-                    TextView textView = new TextView(getContext());
-                    textView.setText(drink.getName());
-                    row.addView(textView);
-                }
-                tableLayout.addView(row);
+                rowHeaderList.add(new RowHeader(customer));
             }
+
+            for (int row = 0; row < event.getCustomers().size(); row++) {
+                List<Cell> r = new ArrayList<>();
+                for (int col = 0; col < event.getDrinks().size(); col++) {
+                    r.add(new Cell("Row: " + row + ", Col: " + col));
+                }
+                cellList.add(r);
+            }
+
+            ListTableViewAdapter adapter = new ListTableViewAdapter();
+
+            this.tableView.setAdapter(adapter);
+            adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
         });
     }
 
