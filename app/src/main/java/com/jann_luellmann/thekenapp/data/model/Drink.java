@@ -23,6 +23,10 @@ import lombok.Setter;
 @Entity
 public class Drink {
 
+    public Drink(long eventId) {
+        this.eventId = eventId;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private long id;
 

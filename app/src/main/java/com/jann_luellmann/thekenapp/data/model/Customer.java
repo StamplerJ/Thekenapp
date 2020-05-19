@@ -21,6 +21,10 @@ import lombok.Setter;
 @Entity
 public class Customer {
 
+    public Customer(long eventId) {
+        this.eventId = eventId;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private long id;
 

@@ -44,7 +44,7 @@ public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return context.getString(R.string.settings_heading);
             default:
-                return null;
+                return "Default";
         }
     }
 }

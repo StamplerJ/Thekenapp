@@ -1,26 +1,21 @@
 package com.jann_luellmann.thekenapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.evrencoskun.tableview.TableView;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
-import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers;
-import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
-import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithCustomersViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
+import com.jann_luellmann.thekenapp.util.Util;
 import com.jann_luellmann.thekenapp.view.Cell;
 import com.jann_luellmann.thekenapp.view.ColumnHeader;
-import com.jann_luellmann.thekenapp.view.CustomerRow;
-import com.jann_luellmann.thekenapp.view.DrinkHeading;
 import com.jann_luellmann.thekenapp.view.ListTableViewAdapter;
+import com.jann_luellmann.thekenapp.view.ListTableViewClickListener;
 import com.jann_luellmann.thekenapp.view.RowHeader;
 
 import java.util.ArrayList;
@@ -54,7 +49,7 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new EventWithDrinksAndCustomersViewModel().findByName("Schützenfest").observe(this, event -> {
+        new EventWithDrinksAndCustomersViewModel().findByName("Schützenfest 1. Tag").observe(this, event -> {
             if(event == null)
                 return;
 
@@ -82,6 +77,8 @@ public class ListFragment extends Fragment {
 
             this.tableView.setAdapter(adapter);
             adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
+
+            this.tableView.setTableViewListener(new ListTableViewClickListener(getContext(), event));
         });
     }
 

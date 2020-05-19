@@ -2,35 +2,33 @@ package com.jann_luellmann.thekenapp;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import lombok.NoArgsConstructor;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import com.jann_luellmann.thekenapp.adapter.TextAdapter;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.Event;
-import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
-import com.jann_luellmann.thekenapp.data.view_model.CustomerViewModel;
-import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
-import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding;
+import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
 import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding;
 import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment;
+import com.jann_luellmann.thekenapp.util.Prefs;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class SettingsFragment extends Fragment {
@@ -39,9 +37,13 @@ public class SettingsFragment extends Fragment {
     private FragmentManager fragmentManager;
     private FragmentSettingsBinding binding;
 
-    private DrinkViewModel drinkViewModel;
-    private CustomerViewModel customerViewModel;
     private EventViewModel eventViewModel;
+    private EventWithDrinksAndCustomersViewModel eventWithDrinksAndCustomersViewModel;
+
+    private List<Drink> drinks = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
+
+    private boolean isSpinnerInitialized = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,23 +62,65 @@ public class SettingsFragment extends Fragment {
 
         fragmentManager = getFragmentManager();
 
-        // Drink setup
-        drinkViewModel = ViewModelProviders.of(this).get(DrinkViewModel.class);
-        generateRecyclerView(view, binding.drinksList, Drink.class, drinkViewModel);
-        binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink()).show(fragmentManager, getString(R.string.drink_tag)));
+        long eventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 1L);
+        eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
+        eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
+            if(event == null)
+                return;
 
-        // Customer setup
-        customerViewModel = ViewModelProviders.of(this).get(CustomerViewModel.class);
-        generateRecyclerView(view, binding.customerList, Customer.class, customerViewModel);
-        binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer()).show(fragmentManager, getString(R.string.customer_tag)));
+            // Drink setup
+            drinks.addAll(event.getDrinks());
+            generateRecyclerView(binding.drinksList, Drink.class, drinks);
+            binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink(eventId)).show(fragmentManager, getString(R.string.drink_tag)));
+
+            // Customer setup
+            customers.addAll(event.getCustomers());
+            generateRecyclerView(binding.customerList, Customer.class, customers);
+            binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer(eventId)).show(fragmentManager, getString(R.string.customer_tag)));
+        });
 
         // Event setup
         eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
-        generateRecyclerView(view, binding.eventList, Event.class, eventViewModel);
-        binding.addEvent.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Event()).show(fragmentManager, getString(R.string.event_tag)));
+        eventViewModel.findAll().observe(this, events -> {
+            generateRecyclerView(binding.eventList, Event.class, events);
+            binding.addEvent.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Event()).show(fragmentManager, getString(R.string.event_tag)));
+
+            // Setup spinner
+            this.binding.eventSpinner.setAdapter(new ArrayAdapter<Event>(getContext(), R.layout.support_simple_spinner_dropdown_item, events));
+            long currentEventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 1L);
+            for (int i = 0; i < this.binding.eventSpinner.getCount(); i++) {
+                Event event = (Event) this.binding.eventSpinner.getItemAtPosition(i);
+                if(event.getId() == currentEventId) {
+                    this.binding.eventSpinner.setSelection(i);
+                    break;
+                }
+            }
+        });
+
+        // Spinner OnItemSelectedListener setup
+        binding.eventSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(!isSpinnerInitialized) {
+                    isSpinnerInitialized = true;
+                    return;
+                }
+
+                Object selectedItem = adapterView.getItemAtPosition(i);
+                if(selectedItem instanceof Event) {
+                    Event selectedEvent = (Event) selectedItem;
+                    Prefs.putLong(getContext(), Prefs.CURRENT_EVENT, selectedEvent.getId());
+
+                    updateData(selectedEvent.getId());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
     }
 
-    private <clazz> void generateRecyclerView(View view, RecyclerView recyclerView, Class clazz, BaseViewModel viewModel) {
+    private <clazz> void generateRecyclerView(RecyclerView recyclerView, Class clazz, List<clazz> items) {
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -85,7 +129,19 @@ public class SettingsFragment extends Fragment {
         TextAdapter<clazz> adapter = new TextAdapter<>();
         recyclerView.setAdapter(adapter);
 
-        viewModel.findAll().observe(this, items -> adapter.setData((List<clazz>) items, fragmentManager));
+        adapter.setData(items, fragmentManager);
+    }
+
+    private void updateData(long eventId) {
+        eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
+            this.drinks.clear();
+            this.drinks.addAll(event.getDrinks());
+            binding.drinksList.getAdapter().notifyDataSetChanged();
+
+            this.customers.clear();
+            this.customers.addAll(event.getCustomers());
+            binding.customerList.getAdapter().notifyDataSetChanged();
+        });
     }
 
     @Override

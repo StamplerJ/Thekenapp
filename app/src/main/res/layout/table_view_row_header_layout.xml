@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/cell_background_color"
-    android:layout_width="@dimen/default_row_header_width"
+    android:layout_width="120dp"
     android:layout_height="@dimen/cell_height">
 
     <LinearLayout
@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:maxLines="1"
             android:textColor="@color/table_view_default_text_color"
             android:textSize="@dimen/text_size"
             android:textStyle="bold"

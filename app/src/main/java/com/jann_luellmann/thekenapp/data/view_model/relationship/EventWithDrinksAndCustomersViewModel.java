@@ -19,6 +19,10 @@ public class EventWithDrinksAndCustomersViewModel extends BaseViewModel {
         return db.eventWithDrinksAndCustomersDAO().getAll();
     }
 
+    public LiveData<EventWithDrinksAndCustomers> findById(long id) {
+        return db.eventWithDrinksAndCustomersDAO().findById(id);
+    }
+
     public LiveData<EventWithDrinksAndCustomers> findByName(String name) {
         return db.eventWithDrinksAndCustomersDAO().findByName(name);
     }

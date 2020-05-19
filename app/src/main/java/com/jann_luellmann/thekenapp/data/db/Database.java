@@ -69,7 +69,8 @@ public class Database {
                     getInstance().clearAllTables();
 
                     getInstance().eventDAO().insertAll(
-                            new Event(1L, "Schützenfest", new Date(), 0)
+                            new Event(1L, "Schützenfest 1. Tag", new Date(), 0),
+                            new Event(2L, "Schützenfest 2. Tag", new Date(), 0)
                     );
 
                     getInstance().customerDAO().insertAll(
@@ -77,14 +78,30 @@ public class Database {
                             new Customer(2L, "Joachim Sander", 1L),
                             new Customer(3L, "Jann Lüllmann", 1L),
                             new Customer(4L, "Malte Sander", 1L),
-                            new Customer(5L, "Marie Lindemann", 1L));
+                            new Customer(5L, "Marc Müller", 1L),
+                            new Customer(6L, "Pascal Wittenberg", 1L),
+                            new Customer(7L, "Tim Tom", 1L),
+                            new Customer(8L, "Marie Lindemann", 1L),
+                            new Customer(9L, "Heinz-Hermann Hansemann Sen.", 1L),
+                            new Customer(14L, "Malte Sander", 2L),
+                            new Customer(15L, "Marc Müller", 2L),
+                            new Customer(16L, "Pascal Wittenberg", 2L),
+                            new Customer(17L, "Tim Tom", 2L));
 
                     getInstance().drinkDAO().insertAll(
                             new Drink(1L, "Wasser", 100, 1l),
                             new Drink(2L, "Bier, Alster", 150, 1l),
                             new Drink(3L, "Cola, Fanta, Sprite", 120, 1l),
                             new Drink(4L, "Charly, Cola-Korn", 250, 1l),
-                            new Drink(5L, "Hugo", 200, 1l));
+                            new Drink(5L, "Barcadi Cola", 300, 1l),
+                            new Drink(6L, "Cocktail", 250, 1l),
+                            new Drink(7L, "Charly, Cola-Korn", 250, 1l),
+                            new Drink(8L, "Charly, Cola-Korn", 250, 1l),
+                            new Drink(9L, "Hugo", 200, 1l),
+                            new Drink(15L, "Barcadi Cola", 300, 1l),
+                            new Drink(16L, "Cocktail", 250, 1l),
+                            new Drink(17L, "Charly, Cola-Korn", 250, 1l),
+                            new Drink(18L, "Charly, Cola-Korn", 250, 1l));
                 }
             });
         });
