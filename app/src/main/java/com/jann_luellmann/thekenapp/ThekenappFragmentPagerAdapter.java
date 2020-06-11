@@ -2,6 +2,8 @@ package com.jann_luellmann.thekenapp;
 
 import android.content.Context;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
+
+    private ListFragment listFragment;
+    private SettingsFragment settingsFragment;
 
     private Context context;
 
@@ -22,9 +27,13 @@ public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new ListFragment();
+                if(listFragment == null)
+                    listFragment = new ListFragment();
+                return listFragment;
             case 1:
-                return new SettingsFragment();
+                if(settingsFragment == null)
+                    settingsFragment = new SettingsFragment();
+                return settingsFragment;
             default:
                 return new ListFragment();
         }
@@ -46,5 +55,13 @@ public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
             default:
                 return "Default";
         }
+    }
+
+    public ListFragment getListFragment() {
+        return listFragment;
+    }
+
+    public SettingsFragment getSettingsFragment() {
+        return settingsFragment;
     }
 }

@@ -1,16 +1,24 @@
 package com.jann_luellmann.thekenapp;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.google.android.material.tabs.TabLayout;
+import com.jann_luellmann.thekenapp.adapter.EventSpinnerAdapter;
 import com.jann_luellmann.thekenapp.data.db.Database;
+import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
+import com.jann_luellmann.thekenapp.util.Prefs;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-public class MainActivity extends AppCompatActivity implements ListFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
+
+    private boolean isSpinnerInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +35,45 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnFr
 
         ThekenappFragmentPagerAdapter adapter = new ThekenappFragmentPagerAdapter(this, getSupportFragmentManager());
 
-
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
-        TabLayout.Tab tab = tabLayout.newTab();
-        Spinner spinner = new Spinner(MainActivity.this);
-//        spinner.setAdapter(new SimpleAdapter());
-        tab.setCustomView(spinner);
-        tabLayout.addTab(tab);
-
         viewPager.setAdapter(adapter);
-    }
 
-    @Override
-    public void onListInteraction() {
-        Log.i("Fragment Interaction", "List");
-    }
+        EventViewModel eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
+        eventViewModel.findAll().observe(this, events -> {
+            Spinner spinner = findViewById(R.id.eventSpinner);
+            spinner.setAdapter(new EventSpinnerAdapter(getApplicationContext(), events));
 
-    @Override
-    public void onSettingsInteraction() {
-        Log.i("Fragment Interaction", "Settings");
+            long currentEventId = Prefs.getLong(getApplicationContext(), Prefs.CURRENT_EVENT, 1L);
+            for (int i = 0; i < spinner.getCount(); i++) {
+                Event event = (Event) spinner.getItemAtPosition(i);
+                if(event.getId() == currentEventId) {
+                    spinner.setSelection(i);
+                    break;
+                }
+            }
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if(!isSpinnerInitialized) {
+                        isSpinnerInitialized = true;
+                        return;
+                    }
+
+                    Object selectedItem = adapterView.getItemAtPosition(i);
+                    if(selectedItem instanceof Event) {
+                        Event selectedEvent = (Event) selectedItem;
+                        Prefs.putLong(getApplicationContext(), Prefs.CURRENT_EVENT, selectedEvent.getId());
+
+                        adapter.getListFragment().onEventUpdated(selectedEvent.getId());
+                        adapter.getSettingsFragment().onEventUpdated(selectedEvent.getId());
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {}
+            });
+        });
     }
 }
