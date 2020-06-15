@@ -6,7 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class EventViewModel extends BaseViewModel {
+public class EventViewModel extends BaseViewModel<Event> {
 
     public EventViewModel() {
         super();
@@ -24,7 +24,13 @@ public class EventViewModel extends BaseViewModel {
         executor.execute(() -> db.eventDAO().update(event));
     }
 
+    @Override
     public LiveData<List<Event>> findAll() {
         return db.eventDAO().getAll();
+    }
+
+    @Override
+    public void insert(long eventId, Event event) {
+        insert(event);
     }
 }

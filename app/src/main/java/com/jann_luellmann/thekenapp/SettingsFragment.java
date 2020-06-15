@@ -9,6 +9,7 @@ import com.jann_luellmann.thekenapp.adapter.TextAdapter;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought;
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
 import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding;
@@ -37,7 +38,7 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
     private EventWithDrinksAndCustomersViewModel eventWithDrinksAndCustomersViewModel;
 
     private List<Drink> drinks = new ArrayList<>();
-    private List<Customer> customers = new ArrayList<>();
+    private List<CustomerWithBought> customers = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,12 +66,12 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
             // Drink setup
             drinks.addAll(event.getDrinks());
             generateRecyclerView(binding.drinksList, Drink.class, drinks);
-            binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink(eventId)).show(fragmentManager, getString(R.string.drink_tag)));
+            binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink()).show(fragmentManager, getString(R.string.drink_tag)));
 
             // Customer setup
-            customers.addAll(event.getCustomers());
+            customers.addAll(event.getCustomerWithBoughts());
             generateRecyclerView(binding.customerList, Customer.class, customers);
-            binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer(eventId)).show(fragmentManager, getString(R.string.customer_tag)));
+            binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer()).show(fragmentManager, getString(R.string.customer_tag)));
         });
 
         // Event setup
@@ -101,7 +102,7 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
             binding.drinksList.getAdapter().notifyDataSetChanged();
 
             this.customers.clear();
-            this.customers.addAll(event.getCustomers());
+            this.customers.addAll(event.getCustomerWithBoughts());
             binding.customerList.getAdapter().notifyDataSetChanged();
         });
     }

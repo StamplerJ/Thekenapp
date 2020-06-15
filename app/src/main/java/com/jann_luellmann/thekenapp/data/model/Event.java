@@ -28,7 +28,7 @@ import lombok.ToString;
 public class Event {
 
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private long eventId;
 
     @ColumnInfo(name = "name")
     @Editable(stringId = R.string.name)

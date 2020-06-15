@@ -21,5 +21,7 @@ public abstract class BaseViewModel<T> extends ViewModel {
         executor = Executors.newSingleThreadExecutor();
     }
 
-    public abstract LiveData<List<Drink>> findAll();
+    public abstract LiveData<List<T>> findAll();
+
+    public abstract void insert(long eventId, T t);
 }

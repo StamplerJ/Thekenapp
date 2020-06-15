@@ -20,6 +20,12 @@ public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
     public ThekenappFragmentPagerAdapter(Context context, @NonNull FragmentManager fm) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
+
+        if(listFragment == null)
+            listFragment = new ListFragment();
+
+        if(settingsFragment == null)
+            settingsFragment = new SettingsFragment();
     }
 
     @NonNull
@@ -27,12 +33,8 @@ public class ThekenappFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                if(listFragment == null)
-                    listFragment = new ListFragment();
                 return listFragment;
             case 1:
-                if(settingsFragment == null)
-                    settingsFragment = new SettingsFragment();
                 return settingsFragment;
             default:
                 return new ListFragment();

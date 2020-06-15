@@ -9,27 +9,35 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 @Dao
-public interface DrinkDAO {
+public abstract class DrinkDAO {
 
     @Query("SELECT * FROM drink")
-    LiveData<List<Drink>> getAll();
+    public abstract LiveData<List<Drink>> getAll();
 
-    @Query("SELECT * FROM drink WHERE id IN (:drinkIds)")
-    LiveData<List<Drink>> loadAllByIds(long[] drinkIds);
+    @Query("SELECT * FROM drink WHERE drinkId IN (:drinkIds)")
+    public abstract LiveData<List<Drink>> loadAllByIds(long[] drinkIds);
 
     @Query("SELECT * FROM drink WHERE name LIKE :name LIMIT 1")
-    LiveData<Drink> findByName(String name);
+    public abstract LiveData<Drink> findByName(String name);
+
+    @Transaction
+    public void insert(long eventId, Drink drink) {
+        insert(drink);
+    }
 
     @Insert
-    void insertAll(Drink... drinks);
+    abstract void insert(Drink drink);
+
+    @Insert
+    public abstract void insertAll(Drink... drinks);
 
     @Update
-    void update(Drink drink);
+    public abstract void update(Drink drink);
 
     @Delete
-    void delete(Drink drink);
-
+    public abstract void delete(Drink drink);
 }

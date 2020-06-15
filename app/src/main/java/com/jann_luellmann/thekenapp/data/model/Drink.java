@@ -23,12 +23,8 @@ import lombok.Setter;
 @Entity
 public class Drink {
 
-    public Drink(long eventId) {
-        this.eventId = eventId;
-    }
-
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private long drinkId;
 
     @ColumnInfo(name = "name")
     @Editable(stringId = R.string.name)
@@ -37,8 +33,6 @@ public class Drink {
     @ColumnInfo(name = "price")
     @Editable(stringId = R.string.price)
     private long price;
-
-    private long eventId;
 
     @NonNull
     @Override

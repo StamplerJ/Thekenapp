@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.evrencoskun.tableview.TableView;
+import com.jann_luellmann.thekenapp.data.model.Bought;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
+import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought;
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers;
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel;
 import com.jann_luellmann.thekenapp.util.Prefs;
 import com.jann_luellmann.thekenapp.view.Cell;
@@ -59,21 +63,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
             if(event == null)
                 return;
 
-            for (Drink drink : event.getDrinks()) {
-                columnHeaderList.add(new ColumnHeader(drink));
-            }
-
-            for (Customer customer : event.getCustomers()) {
-                rowHeaderList.add(new RowHeader(customer));
-            }
-
-            for (int row = 0; row < event.getCustomers().size(); row++) {
-                List<Cell> r = new ArrayList<>();
-                for (int col = 0; col < event.getDrinks().size(); col++) {
-                    r.add(new Cell("Row: " + row + ", Col: " + col));
-                }
-                cellList.add(r);
-            }
+            setData(event);
 
             this.adapter = new ListTableViewAdapter();
 
@@ -88,26 +78,29 @@ public class ListFragment extends Fragment implements EventChangedListener {
     public void onEventUpdated(long eventId) {
         eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
             this.columnHeaderList.clear();
-            for (Drink drink : event.getDrinks()) {
-                this.columnHeaderList.add(new ColumnHeader(drink));
-            }
-
             this.rowHeaderList.clear();
-            for (Customer customer : event.getCustomers()) {
-                this.rowHeaderList.add(new RowHeader(customer));
-            }
-
             this.cellList.clear();
-            for (int row = 0; row < event.getCustomers().size(); row++) {
-                List<Cell> r = new ArrayList<>();
-                for (int col = 0; col < event.getDrinks().size(); col++) {
-                    r.add(new Cell("Row: " + row + ", Col: " + col));
-                }
-                cellList.add(r);
-            }
+
+            setData(event);
 
             this.adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
             this.adapter.notifyDataSetChanged();
         });
+    }
+
+    private void setData(EventWithDrinksAndCustomers event) {
+        for (Drink drink : event.getDrinks()) {
+            columnHeaderList.add(new ColumnHeader(drink.toString()));
+        }
+
+        for (CustomerWithBought customer : event.getCustomerWithBoughts()) {
+            rowHeaderList.add(new RowHeader(customer.toString()));
+
+            List<Cell> r = new ArrayList<>();
+            for (Bought bought : customer.getBoughts()) {
+                r.add(new Cell(bought.getAmount()));
+            }
+            cellList.add(r);
+        }
     }
 }

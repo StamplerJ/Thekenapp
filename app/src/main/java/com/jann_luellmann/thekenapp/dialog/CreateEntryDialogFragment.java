@@ -22,6 +22,7 @@ import com.jann_luellmann.thekenapp.databinding.DialogEntryDateBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryEdittextBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryMoneyBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding;
+import com.jann_luellmann.thekenapp.util.Prefs;
 import com.jann_luellmann.thekenapp.util.TextUtil;
 
 import java.lang.reflect.Field;
@@ -40,7 +41,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
     private T item;
     private List<Entry> entries = new ArrayList<>();
 
-    public CreateEntryDialogFragment(T item) {
+    public  CreateEntryDialogFragment(T item) {
         this.item = item;
     }
 
@@ -111,6 +112,8 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
     }
 
     private void createEntry() {
+        long eventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 1L);
+
         if(item instanceof Drink) {
             Drink drink = (Drink) item;
 
@@ -127,7 +130,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
                 }
             }
 
-            new DrinkViewModel().insert(drink);
+            new DrinkViewModel().insert(eventId, drink);
         }
         else if(item instanceof Customer) {
             Customer customer = (Customer) item;
@@ -139,7 +142,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
                 }
             }
 
-            new CustomerViewModel().insert(customer);
+            new CustomerViewModel().insert(eventId, customer);
         }
         else if(item instanceof Event) {
             Event event = (Event) item;

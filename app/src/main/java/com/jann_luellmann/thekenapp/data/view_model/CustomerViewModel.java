@@ -6,7 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class CustomerViewModel extends BaseViewModel {
+public class CustomerViewModel extends BaseViewModel<Customer> {
 
     public CustomerViewModel() {
         super();
@@ -26,5 +26,10 @@ public class CustomerViewModel extends BaseViewModel {
 
     public LiveData<List<Customer>> findAll() {
         return db.customerDAO().getAll();
+    }
+
+    @Override
+    public void insert(long eventId, Customer customer) {
+        executor.execute(() -> db.customerDAO().insert(eventId, customer));
     }
 }

@@ -1,7 +1,5 @@
 package com.jann_luellmann.thekenapp.data.view_model.relationship;
 
-import android.app.Application;
-
 import com.jann_luellmann.thekenapp.data.model.Event;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
@@ -9,9 +7,8 @@ import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
-import lombok.NonNull;
 
-public class EventWithCustomersViewModel extends BaseViewModel {
+public class EventWithCustomersViewModel extends BaseViewModel<EventWithCustomers> {
 
     public EventWithCustomersViewModel() {
         super();
@@ -27,5 +24,10 @@ public class EventWithCustomersViewModel extends BaseViewModel {
 
     public LiveData<EventWithCustomers> findByEvent(Event event) {
         return db.eventWithCustomersDAO().findByName(event.getName());
+    }
+
+    @Override
+    public void insert(long eventId, EventWithCustomers eventWithCustomers) {
+        //noi
     }
 }

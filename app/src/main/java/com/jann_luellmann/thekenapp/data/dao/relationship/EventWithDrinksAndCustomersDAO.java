@@ -21,6 +21,6 @@ public interface EventWithDrinksAndCustomersDAO {
     LiveData<EventWithDrinksAndCustomers> findByName(String name);
 
     @Transaction
-    @Query("SELECT * FROM event WHERE event.id = :id LIMIT 1")
+    @Query("SELECT * FROM event WHERE eventId = :id LIMIT 1")
     LiveData<EventWithDrinksAndCustomers> findById(long id);
 }

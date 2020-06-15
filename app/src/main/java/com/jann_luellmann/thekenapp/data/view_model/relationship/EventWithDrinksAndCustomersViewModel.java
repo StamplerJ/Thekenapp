@@ -9,7 +9,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class EventWithDrinksAndCustomersViewModel extends BaseViewModel {
+public class EventWithDrinksAndCustomersViewModel extends BaseViewModel<EventWithDrinksAndCustomers> {
 
     public EventWithDrinksAndCustomersViewModel() {
         super();
@@ -29,5 +29,10 @@ public class EventWithDrinksAndCustomersViewModel extends BaseViewModel {
 
     public LiveData<EventWithDrinksAndCustomers> findByEvent(Event event) {
         return db.eventWithDrinksAndCustomersDAO().findByName(event.getName());
+    }
+
+    @Override
+    public void insert(long eventId, EventWithDrinksAndCustomers event) {
+        //nop
     }
 }

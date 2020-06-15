@@ -1,6 +1,7 @@
 package com.jann_luellmann.thekenapp.data.dao;
 
 import com.jann_luellmann.thekenapp.data.model.Bought;
+import com.jann_luellmann.thekenapp.data.model.Customer;
 
 import java.util.List;
 
@@ -9,19 +10,28 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 @Dao
-public interface BoughtDAO {
+public abstract class BoughtDAO {
 
     @Query("SELECT * FROM bought")
-    LiveData<List<Bought>> getAll();
+    public abstract LiveData<List<Bought>> getAll();
 
-    @Query("SELECT * FROM bought WHERE id IN (:boughtIds)")
-    LiveData<List<Bought>> loadAllByIds(long[] boughtIds);
+    @Query("SELECT * FROM bought WHERE customerId IN (:customerIds)")
+    public abstract LiveData<List<Bought>> findAllByCustomerIds(long[] customerIds);
+
+    @Transaction
+    public void insert(long customerId, long drinkId, int amount) {
+        insert(new Bought(customerId, drinkId, amount));
+    }
 
     @Insert
-    void insertAll(Bought... boughts);
+    public abstract void insert(Bought bought);
+
+    @Insert
+    public abstract void insertAll(Bought... boughts);
 
     @Delete
-    void delete(Bought bought);
+    public abstract void delete(Bought bought);
 }

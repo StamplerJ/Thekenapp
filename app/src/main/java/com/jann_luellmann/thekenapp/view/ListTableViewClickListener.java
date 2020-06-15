@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.evrencoskun.tableview.listener.ITableViewListener;
 import com.jann_luellmann.thekenapp.data.model.Customer;
-import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers;
 
 import androidx.annotation.NonNull;
@@ -51,7 +51,7 @@ public class ListTableViewClickListener implements ITableViewListener {
 
     @Override
     public void onRowHeaderClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
-        Customer customer = this.event.getCustomers().get(row);
+        CustomerWithBought customer = this.event.getCustomerWithBoughts().get(row);
         Toast.makeText(this.context, customer.toString(), Toast.LENGTH_SHORT).show();
     }
 

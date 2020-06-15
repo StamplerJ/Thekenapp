@@ -21,18 +21,12 @@ import lombok.Setter;
 @Entity
 public class Customer {
 
-    public Customer(long eventId) {
-        this.eventId = eventId;
-    }
-
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private long customerId;
 
     @ColumnInfo(name = "name")
     @Editable(stringId = R.string.name)
     private String name;
-
-    private long eventId;
 
     @NonNull
     @Override

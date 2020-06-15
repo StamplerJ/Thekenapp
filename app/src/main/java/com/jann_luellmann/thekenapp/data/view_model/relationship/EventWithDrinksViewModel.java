@@ -1,7 +1,5 @@
 package com.jann_luellmann.thekenapp.data.view_model.relationship;
 
-import android.app.Application;
-
 import com.jann_luellmann.thekenapp.data.model.Event;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinks;
 import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
@@ -9,9 +7,8 @@ import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
-import lombok.NonNull;
 
-public class EventWithDrinksViewModel extends BaseViewModel {
+public class EventWithDrinksViewModel extends BaseViewModel<EventWithDrinks> {
 
     public EventWithDrinksViewModel() {
         super();
@@ -27,5 +24,10 @@ public class EventWithDrinksViewModel extends BaseViewModel {
 
     public LiveData<EventWithDrinks> findByEvent(Event event) {
         return db.eventWithDrinksDAO().findByName(event.getName());
+    }
+
+    @Override
+    public void insert(long eventId, EventWithDrinks eventWithDrinks) {
+        //nop
     }
 }

@@ -17,7 +17,7 @@ public interface EventDAO {
     @Query("SELECT * FROM event ORDER BY date")
     LiveData<List<Event>> getAll();
 
-    @Query("SELECT * FROM event WHERE id IN (:eventIds)")
+    @Query("SELECT * FROM event WHERE eventId IN (:eventIds)")
     LiveData<List<Event>> loadAllByIds(long[] eventIds);
 
     @Query("SELECT * FROM event WHERE name LIKE :name LIMIT 1")

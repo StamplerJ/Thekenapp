@@ -2,23 +2,23 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "15a20e269468a86d8026a6bb3d2fc543",
+    "identityHash": "961f770b1c09942f29a90dcb1c4627ce",
     "entities": [
       {
         "tableName": "Bought",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `amount` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER NOT NULL, `drinkId` INTEGER NOT NULL, `amount` INTEGER NOT NULL, PRIMARY KEY(`customerId`, `drinkId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "customerId",
+            "columnName": "customerId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
+            "fieldPath": "drinkId",
+            "columnName": "drinkId",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "amount",
@@ -29,20 +29,21 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "customerId",
+            "drinkId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "Customer",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `eventId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "customerId",
+            "columnName": "customerId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -51,17 +52,11 @@
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "eventId",
-            "columnName": "eventId",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "customerId"
           ],
           "autoGenerate": true
         },
@@ -70,11 +65,11 @@
       },
       {
         "tableName": "Drink",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `price` INTEGER NOT NULL, `eventId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`drinkId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `price` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "drinkId",
+            "columnName": "drinkId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -89,17 +84,11 @@
             "columnName": "price",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "eventId",
-            "columnName": "eventId",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "drinkId"
           ],
           "autoGenerate": true
         },
@@ -108,11 +97,11 @@
       },
       {
         "tableName": "Event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER, `total` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `date` INTEGER, `total` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "eventId",
+            "columnName": "eventId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -137,7 +126,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "eventId"
           ],
           "autoGenerate": true
         },
@@ -145,27 +134,55 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Sold",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` INTEGER NOT NULL)",
+        "tableName": "EventCustomerCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER NOT NULL, `customerId` INTEGER NOT NULL, PRIMARY KEY(`eventId`, `customerId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "eventId",
+            "columnName": "eventId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "customerId",
+            "columnName": "customerId",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "eventId",
+            "customerId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "EventDrinkCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER NOT NULL, `drinkId` INTEGER NOT NULL, PRIMARY KEY(`eventId`, `drinkId`))",
+        "fields": [
+          {
+            "fieldPath": "eventId",
+            "columnName": "eventId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drinkId",
+            "columnName": "drinkId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "eventId",
+            "drinkId"
+          ],
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -174,7 +191,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '15a20e269468a86d8026a6bb3d2fc543')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '961f770b1c09942f29a90dcb1c4627ce')"
     ]
   }
 }

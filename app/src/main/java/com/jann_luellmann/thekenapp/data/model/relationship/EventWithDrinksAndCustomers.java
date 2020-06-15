@@ -3,10 +3,13 @@ package com.jann_luellmann.thekenapp.data.model.relationship;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.EventCustomerCrossRef;
+import com.jann_luellmann.thekenapp.data.model.EventDrinkCrossRef;
 
 import java.util.List;
 
 import androidx.room.Embedded;
+import androidx.room.Junction;
 import androidx.room.Relation;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +22,17 @@ public class EventWithDrinksAndCustomers {
     private Event event;
 
     @Relation(
-            parentColumn = "id",
-            entityColumn = "eventId"
+            parentColumn = "eventId",
+            entityColumn = "drinkId",
+            associateBy = @Junction(EventDrinkCrossRef.class)
     )
     private List<Drink> drinks;
 
     @Relation(
-            parentColumn = "id",
-            entityColumn = "eventId"
+            entity = Customer.class,
+            parentColumn = "eventId",
+            entityColumn = "customerId",
+            associateBy = @Junction(EventCustomerCrossRef.class)
     )
-    private List<Customer> customers;
+    private List<CustomerWithBought> customerWithBoughts;
 }

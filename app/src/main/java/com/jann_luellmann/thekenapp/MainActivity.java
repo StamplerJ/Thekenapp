@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             long currentEventId = Prefs.getLong(getApplicationContext(), Prefs.CURRENT_EVENT, 1L);
             for (int i = 0; i < spinner.getCount(); i++) {
                 Event event = (Event) spinner.getItemAtPosition(i);
-                if(event.getId() == currentEventId) {
+                if(event.getEventId() == currentEventId) {
                     spinner.setSelection(i);
                     break;
                 }
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
                     Object selectedItem = adapterView.getItemAtPosition(i);
                     if(selectedItem instanceof Event) {
                         Event selectedEvent = (Event) selectedItem;
-                        Prefs.putLong(getApplicationContext(), Prefs.CURRENT_EVENT, selectedEvent.getId());
+                        Prefs.putLong(getApplicationContext(), Prefs.CURRENT_EVENT, selectedEvent.getEventId());
 
-                        adapter.getListFragment().onEventUpdated(selectedEvent.getId());
-                        adapter.getSettingsFragment().onEventUpdated(selectedEvent.getId());
+                        adapter.getListFragment().onEventUpdated(selectedEvent.getEventId());
+                        adapter.getSettingsFragment().onEventUpdated(selectedEvent.getEventId());
                     }
                 }
 

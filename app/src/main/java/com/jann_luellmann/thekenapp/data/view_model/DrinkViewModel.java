@@ -6,7 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class DrinkViewModel extends BaseViewModel {
+public class DrinkViewModel extends BaseViewModel<Drink> {
 
     public DrinkViewModel() {
         super();
@@ -26,5 +26,10 @@ public class DrinkViewModel extends BaseViewModel {
 
     public LiveData<List<Drink>> findAll() {
         return db.drinkDAO().getAll();
+    }
+
+    @Override
+    public void insert(long eventId, Drink drink) {
+        executor.execute(() -> db.drinkDAO().insert(eventId, drink));
     }
 }
