@@ -24,4 +24,6 @@ public abstract class BaseViewModel<T> extends ViewModel {
     public abstract LiveData<List<T>> findAll();
 
     public abstract void insert(long eventId, T t);
+
+    public abstract void delete(T t);
 }

@@ -24,13 +24,8 @@ public abstract class DrinkDAO {
     @Query("SELECT * FROM drink WHERE name LIKE :name LIMIT 1")
     public abstract LiveData<Drink> findByName(String name);
 
-    @Transaction
-    public void insert(long eventId, Drink drink) {
-        insert(drink);
-    }
-
     @Insert
-    abstract void insert(Drink drink);
+    public abstract long insert(Drink drink);
 
     @Insert
     public abstract void insertAll(Drink... drinks);

@@ -1,6 +1,7 @@
 package com.jann_luellmann.thekenapp.data.view_model;
 
 import com.jann_luellmann.thekenapp.data.model.Drink;
+import com.jann_luellmann.thekenapp.data.model.EventDrinkCrossRef;
 
 import java.util.List;
 
@@ -30,6 +31,14 @@ public class DrinkViewModel extends BaseViewModel<Drink> {
 
     @Override
     public void insert(long eventId, Drink drink) {
-        executor.execute(() -> db.drinkDAO().insert(eventId, drink));
+        executor.execute(() -> {
+            long id = db.drinkDAO().insert(drink);
+            db.eventDrinkCrossDAO().insertAll(new EventDrinkCrossRef(eventId, id));
+        });
+    }
+
+    @Override
+    public void delete(Drink drink) {
+        executor.execute(() -> db.drinkDAO().delete(drink));
     }
 }

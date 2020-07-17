@@ -10,17 +10,24 @@ import android.widget.TextView;
 
 import com.jann_luellmann.thekenapp.R;
 import com.jann_luellmann.thekenapp.adapter.Entry;
+import com.jann_luellmann.thekenapp.data.dao.EventDrinkCrossDAO;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Drink;
 import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.EventDrinkCrossRef;
+import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought;
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 import com.jann_luellmann.thekenapp.data.util.Editable;
 import com.jann_luellmann.thekenapp.data.view_model.CustomerViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel;
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel;
+import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithCustomersViewModel;
+import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksViewModel;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryDateBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryEdittextBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogEntryMoneyBinding;
 import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding;
+import com.jann_luellmann.thekenapp.util.Prefs;
 import com.jann_luellmann.thekenapp.util.TextUtil;
 
 import java.lang.reflect.Field;
@@ -40,7 +47,12 @@ public class EditEntryDialogFragment extends DialogFragment {
     private List<Entry> entries = new ArrayList<>();
 
     public EditEntryDialogFragment(Object item) {
-        this.item = item;
+        if(item instanceof CustomerWithBought) {
+            this.item = ((CustomerWithBought) item).getCustomer();
+        }
+        else {
+            this.item = item;
+        }
     }
 
     @Override
@@ -58,11 +70,12 @@ public class EditEntryDialogFragment extends DialogFragment {
         int height = metrics.heightPixels;
         getDialog().getWindow().setLayout((int) (width * 0.8f), (int) (height * 0.8f));
 
-        binding.title.setText(getContext().getString(R.string.create_title));
+        binding.title.setText(getContext().getString(R.string.edit_title));
 
         for (View v : generateInputs(item))
             binding.fieldsHolder.addView(v);
 
+        binding.deleteButton.setOnClickListener(b -> deleteEntry());
         binding.cancelButton.setOnClickListener(b -> dismiss());
         binding.saveButton.setOnClickListener(b -> updateEntry());
     }
@@ -167,6 +180,21 @@ public class EditEntryDialogFragment extends DialogFragment {
             }
 
             new EventViewModel().update(event);
+        }
+
+        dismiss();
+    }
+
+    private void deleteEntry() {
+        long eventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 0L);
+        if(item instanceof Drink) {
+            new EventWithDrinksViewModel().delete(eventId, (Drink) item);
+        }
+        else if (item instanceof Customer) {
+            new EventWithCustomersViewModel().delete(eventId, (Customer) item);
+        }
+        else if (item instanceof Event) {
+            new EventViewModel().delete((Event) item);
         }
 
         dismiss();

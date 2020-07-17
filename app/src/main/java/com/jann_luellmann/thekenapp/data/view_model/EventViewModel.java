@@ -33,4 +33,9 @@ public class EventViewModel extends BaseViewModel<Event> {
     public void insert(long eventId, Event event) {
         insert(event);
     }
+
+    @Override
+    public void delete(Event event) {
+        executor.execute(() -> db.eventDAO().delete(event));
+    }
 }

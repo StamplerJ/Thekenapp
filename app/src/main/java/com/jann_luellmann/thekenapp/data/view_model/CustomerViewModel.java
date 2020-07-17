@@ -1,6 +1,7 @@
 package com.jann_luellmann.thekenapp.data.view_model;
 
 import com.jann_luellmann.thekenapp.data.model.Customer;
+import com.jann_luellmann.thekenapp.data.model.EventCustomerCrossRef;
 
 import java.util.List;
 
@@ -30,6 +31,14 @@ public class CustomerViewModel extends BaseViewModel<Customer> {
 
     @Override
     public void insert(long eventId, Customer customer) {
-        executor.execute(() -> db.customerDAO().insert(eventId, customer));
+        executor.execute(() -> {
+            long id = db.customerDAO().insert(customer);
+            db.eventCustomerCrossDAO().insertAll(new EventCustomerCrossRef(eventId, id));
+        });
+    }
+
+    @Override
+    public void delete(Customer customer) {
+        executor.execute(() -> db.customerDAO().delete(customer));
     }
 }

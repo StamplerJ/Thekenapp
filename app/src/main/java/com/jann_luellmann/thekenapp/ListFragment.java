@@ -22,6 +22,7 @@ import com.jann_luellmann.thekenapp.view.RowHeader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,6 +58,10 @@ public class ListFragment extends Fragment implements EventChangedListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.adapter = new ListTableViewAdapter();
+        this.tableView.setAdapter(adapter);
+        this.adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
+
         long eventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 1L);
         eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
         eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
@@ -65,17 +70,21 @@ public class ListFragment extends Fragment implements EventChangedListener {
 
             setData(event);
 
-            this.adapter = new ListTableViewAdapter();
-
-            this.tableView.setAdapter(adapter);
-            this.adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
-
             this.tableView.setTableViewListener(new ListTableViewClickListener(getContext(), event));
         });
     }
 
     @Override
     public void onEventUpdated(long eventId) {
+        if(eventWithDrinksAndCustomersViewModel == null) {
+            if(isAdded()) {
+                eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
+            }
+            else {
+                return;
+            }
+        }
+
         eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
             this.columnHeaderList.clear();
             this.rowHeaderList.clear();
@@ -89,18 +98,38 @@ public class ListFragment extends Fragment implements EventChangedListener {
     }
 
     private void setData(EventWithDrinksAndCustomers event) {
+        if(event == null)
+            return;
+
         for (Drink drink : event.getDrinks()) {
             columnHeaderList.add(new ColumnHeader(drink.toString()));
         }
 
-        for (CustomerWithBought customer : event.getCustomerWithBoughts()) {
-            rowHeaderList.add(new RowHeader(customer.toString()));
+        columnHeaderList.add(new ColumnHeader(getString(R.string.total)));
 
-            List<Cell> r = new ArrayList<>();
-            for (Bought bought : customer.getBoughts()) {
-                r.add(new Cell(bought.getAmount()));
+        for (CustomerWithBought customer : event.getCustomerWithBoughts()) {
+            rowHeaderList.add(new RowHeader(customer.getCustomer().toString()));
+
+            float sum = 0f;
+
+            List<Cell> row = new ArrayList<>();
+            for (Drink drink : event.getDrinks()) {
+                boolean isBoughtPresent = false;
+                for (Bought bought : customer.getBoughts()) {
+                    if(bought.getDrinkId() == drink.getDrinkId()) {
+                        sum += bought.getAmount() * drink.getPrice();
+                        row.add(new Cell(bought.getAmount()));
+                        isBoughtPresent = true;
+                        break;
+                    }
+                }
+                if(!isBoughtPresent) {
+                    row.add(new Cell(0));
+                }
             }
-            cellList.add(r);
+
+            row.add(new Cell(String.format(Locale.GERMAN, "%.2f€", (sum / 100f))));
+            cellList.add(row);
         }
     }
 }

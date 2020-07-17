@@ -1,27 +1,30 @@
 <resources>
     <string name="app_name">Thekenapp</string>
-    <string name="list_heading">Liste</string>
-    <string name="settings_heading">Einstellungen</string>
+    <string name="list_heading">List</string>
+    <string name="settings_heading">Settings</string>
 
-    <string name="drinks_label">Getränke</string>
-    <string name="plus_sign">+</string>
-    <string name="minus_sign">-</string>
-    <string name="customer_label">Kunden</string>
-    <string name="event_label">Veranstaltungen</string>
-    <string name="edit_icon">Edit icon</string>
-    <string name="edit">Bearbeiten</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="save">Speichern</string>
-    <string name="edit_title">Ändern</string>
-    <string name="label_for_the_edittext">Label for the EditText</string>
-    <string name="create_title">Erstellen</string>
-    <string name="drink_tag">DRINK</string>
-    <string name="customer_tag">CUSTOMER</string>
-    <string name="event_tag">EVENT</string>
+    <string name="drinks_label">Drinks</string>
+    <string name="plus_sign" translatable="false">+</string>
+    <string name="minus_sign" translatable="false">-</string>
+    <string name="customer_label">Customers</string>
+    <string name="event_label">Events</string>
+    <string name="edit_icon" translatable="false">Edit icon</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="edit_title">Edit</string>
+    <string name="label_for_the_edittext" translatable="false">Label for the EditText</string>
+    <string name="create_title">Create</string>
+    <string name="drink_tag" translatable="false">DRINK</string>
+    <string name="customer_tag" translatable="false">CUSTOMER</string>
+    <string name="event_tag" translatable="false">EVENT</string>
 
     <!-- Editable names -->
     <string name="name">Name</string>
-    <string name="date">Datum</string>
-    <string name="price">Preis</string>
-    <string name="chosen_event_label">Ausgewählt</string>\
+    <string name="date">Date</string>
+    <string name="price">Price</string>
+    <string name="chosen_event_label">Chosen</string>
+    <string name="delete">Delete</string>
+    <string name="total">Total</string>
+    <string name="add">Add</string>
 </resources>

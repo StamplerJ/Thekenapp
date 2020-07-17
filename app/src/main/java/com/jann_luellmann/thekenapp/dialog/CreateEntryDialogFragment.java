@@ -65,6 +65,7 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
         for (View v : generateInputs(item))
             binding.fieldsHolder.addView(v);
 
+        binding.deleteButton.setVisibility(View.GONE);
         binding.cancelButton.setOnClickListener(b -> dismiss());
         binding.saveButton.setOnClickListener(b -> createEntry());
     }

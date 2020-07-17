@@ -5,6 +5,7 @@ import android.content.Context;
 import com.jann_luellmann.thekenapp.data.dao.BoughtDAO;
 import com.jann_luellmann.thekenapp.data.dao.CustomerDAO;
 import com.jann_luellmann.thekenapp.data.dao.DrinkDAO;
+import com.jann_luellmann.thekenapp.data.dao.EventCustomerCrossDAO;
 import com.jann_luellmann.thekenapp.data.dao.EventDAO;
 import com.jann_luellmann.thekenapp.data.dao.EventDrinkCrossDAO;
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithCustomersDAO;
@@ -40,6 +41,7 @@ public class Database {
         public abstract EventWithDrinksDAO eventWithDrinksDAO();
 
         public abstract EventDrinkCrossDAO eventDrinkCrossDAO();
+        public abstract EventCustomerCrossDAO eventCustomerCrossDAO();
 
         public abstract EventWithDrinksAndCustomersDAO eventWithDrinksAndCustomersDAO();
     }
@@ -65,45 +67,67 @@ public class Database {
 
     private void populateInitialData() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            getInstance().runInTransaction(new Runnable() {
-                @Override
-                public void run() {
-                    getInstance().clearAllTables();
+            getInstance().runInTransaction(() -> {
+                getInstance().clearAllTables();
 
-                    getInstance().eventDAO().insertAll(
-                            new Event(1L, "Schützenfest 1. Tag", new Date(), 0),
-                            new Event(2L, "Schützenfest 2. Tag", new Date(), 0)
-                    );
+                getInstance().eventDAO().insertAll(
+                        new Event(1L, "Schützenfest 1. Tag", new Date(), 0),
+                        new Event(2L, "Schützenfest 2. Tag", new Date(), 0)
+                );
 
-                    getInstance().customerDAO().insertAll(
-                            new Customer(1L, "Jana Körner"),
-                            new Customer(2L, "Joachim Sander"),
-                            new Customer(3L, "Jann Lüllmann"),
-                            new Customer(4L, "Malte Sander"),
-                            new Customer(5L, "Marc Müller"),
-                            new Customer(6L, "Pascal Wittenberg"),
-                            new Customer(7L, "Tim Tom"),
-                            new Customer(8L, "Marie Lindemann"),
-                            new Customer(9L, "Heinz-Hermann Hansemann Sen."));
+                getInstance().customerDAO().insertAll(
+                        new Customer(1L, "Jana Körner"),
+                        new Customer(2L, "Joachim Sander"),
+                        new Customer(3L, "Jann Lüllmann"),
+                        new Customer(4L, "Malte Sander"),
+                        new Customer(5L, "Marc Müller"),
+                        new Customer(6L, "Pascal Wittenberg"),
+                        new Customer(7L, "Tim Tom"),
+                        new Customer(8L, "Marie Lindemann"),
+                        new Customer(9L, "Heinz-Hermann Hansemann Sen."));
 
-                    getInstance().drinkDAO().insertAll(
-                            new Drink(1L, "Wasser", 100),
-                            new Drink(2L, "Bier, Alster", 150),
-                            new Drink(3L, "Cola, Fanta, Sprite", 120),
-                            new Drink(5L, "Barcadi Cola", 300),
-                            new Drink(6L, "Cocktail", 250),
-                            new Drink(9L, "Hugo", 200),
-                            new Drink(16L, "Cocktail", 250),
-                            new Drink(17L, "Charly, Cola-Korn", 250),
-                            new Drink(18L, "Charly, Cola-Korn", 300));
+                getInstance().drinkDAO().insertAll(
+                        new Drink(1L, "Wasser", 100),
+                        new Drink(2L, "Bier, Alster", 150),
+                        new Drink(3L, "Cola, Fanta, Sprite", 120),
+                        new Drink(5L, "Barcadi Cola", 300),
+                        new Drink(6L, "Cocktail", 250),
+                        new Drink(9L, "Hugo", 200),
+                        new Drink(16L, "Cocktail", 250),
+                        new Drink(17L, "Charly, Cola-Korn", 250),
+                        new Drink(18L, "Charly, Cola-Korn", 300));
 
-                    getInstance().eventDrinkCrossDAO().insertAll(
-                            new EventDrinkCrossRef(1L, 1L),
-                            new EventDrinkCrossRef(1L, 2L),
-                            new EventDrinkCrossRef(2L, 1L),
-                            new EventDrinkCrossRef(2L, 3L)
-                    );
-                }
+                getInstance().eventDrinkCrossDAO().insertAll(
+                        new EventDrinkCrossRef(1L, 1L),
+                        new EventDrinkCrossRef(1L, 2L),
+                        new EventDrinkCrossRef(1L, 3L),
+                        new EventDrinkCrossRef(1L, 5L),
+                        new EventDrinkCrossRef(2L, 1L),
+                        new EventDrinkCrossRef(2L, 2L),
+                        new EventDrinkCrossRef(2L, 5L),
+                        new EventDrinkCrossRef(2L, 3L)
+                );
+
+                getInstance().eventCustomerCrossDAO().insertAll(
+                        new EventCustomerCrossRef(1L, 1L),
+                        new EventCustomerCrossRef(1L, 2L),
+                        new EventCustomerCrossRef(1L, 3L),
+                        new EventCustomerCrossRef(1L, 4L),
+                        new EventCustomerCrossRef(1L, 5L),
+                        new EventCustomerCrossRef(2L, 6L),
+                        new EventCustomerCrossRef(2L, 7L),
+                        new EventCustomerCrossRef(2L, 1L),
+                        new EventCustomerCrossRef(2L, 2L)
+                );
+
+                getInstance().boughtDAO().insertAll(
+                        new Bought(1L, 1L, 3),
+                        new Bought(1L, 2L, 4),
+                        new Bought(1L, 3L, 6),
+                        new Bought(2L, 1L, 2),
+                        new Bought(2L, 3L, 0),
+                        new Bought(2L, 2L, 18)
+                );
             });
         });
     }

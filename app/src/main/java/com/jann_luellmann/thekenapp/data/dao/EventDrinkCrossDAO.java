@@ -23,4 +23,7 @@ public interface EventDrinkCrossDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(EventDrinkCrossRef... eventDrinkCrossRefs);
+
+    @Delete
+    void delete(EventDrinkCrossRef eventDrinkCrossRef);
 }

@@ -35,4 +35,9 @@ public class EventWithDrinksAndCustomersViewModel extends BaseViewModel<EventWit
     public void insert(long eventId, EventWithDrinksAndCustomers event) {
         //nop
     }
+
+    @Override
+    public void delete(EventWithDrinksAndCustomers eventWithDrinksAndCustomers) {
+        //nop
+    }
 }

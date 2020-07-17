@@ -1,6 +1,9 @@
 package com.jann_luellmann.thekenapp.data.view_model.relationship;
 
+import com.jann_luellmann.thekenapp.data.model.Customer;
 import com.jann_luellmann.thekenapp.data.model.Event;
+import com.jann_luellmann.thekenapp.data.model.EventCustomerCrossRef;
+import com.jann_luellmann.thekenapp.data.model.EventDrinkCrossRef;
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers;
 import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
 
@@ -29,5 +32,14 @@ public class EventWithCustomersViewModel extends BaseViewModel<EventWithCustomer
     @Override
     public void insert(long eventId, EventWithCustomers eventWithCustomers) {
         //noi
+    }
+
+    @Override
+    public void delete(EventWithCustomers eventWithCustomers) {
+        //noi
+    }
+
+    public void delete(long eventId, Customer customer) {
+        executor.execute(() -> db.eventCustomerCrossDAO().delete(new EventCustomerCrossRef(eventId, customer.getCustomerId())));
     }
 }
