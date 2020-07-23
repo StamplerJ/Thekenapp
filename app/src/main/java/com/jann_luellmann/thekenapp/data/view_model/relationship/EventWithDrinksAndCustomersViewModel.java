@@ -8,6 +8,8 @@ import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class EventWithDrinksAndCustomersViewModel extends BaseViewModel<EventWithDrinksAndCustomers> {
 

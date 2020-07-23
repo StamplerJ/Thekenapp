@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
+    private boolean showEditButton;
     private List<T> data;
     private FragmentManager fragmentManager;
 
@@ -30,7 +31,7 @@ public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder>
         ViewHolder(View v) {
             super(v);
             textView = v.findViewById(R.id.textView);
-            imageButton = v.findViewById(R.id.imageButton);
+            imageButton = v.findViewById(R.id.editButton);
         }
 
         void updateData(T item, FragmentManager fragmentManager) {
@@ -40,7 +41,8 @@ public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder>
         }
     }
 
-    public TextAdapter() {
+    public TextAdapter(boolean showEditButton) {
+        this.showEditButton = showEditButton;
         this.data = new ArrayList<T>();
     }
 
@@ -48,6 +50,11 @@ public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder>
     @Override
     public TextAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_entry, parent, false);
+
+        if(!this.showEditButton) {
+            v.findViewById(R.id.editButton).setVisibility(View.GONE);
+        }
+
         return new TextAdapter.ViewHolder(v);
     }
 

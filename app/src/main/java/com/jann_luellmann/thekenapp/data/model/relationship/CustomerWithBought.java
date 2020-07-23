@@ -13,7 +13,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerWithBought {
+public class CustomerWithBought implements Comparable<CustomerWithBought> {
     @Embedded
     private Customer customer;
 
@@ -27,5 +27,10 @@ public class CustomerWithBought {
     @Override
     public String toString() {
         return customer.getName();
+    }
+
+    @Override
+    public int compareTo(CustomerWithBought c) {
+        return this.customer.getName().compareTo(c.getCustomer().getName());
     }
 }

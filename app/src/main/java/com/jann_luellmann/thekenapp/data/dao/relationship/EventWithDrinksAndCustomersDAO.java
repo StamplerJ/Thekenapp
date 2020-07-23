@@ -5,6 +5,8 @@ import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCu
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Transaction;

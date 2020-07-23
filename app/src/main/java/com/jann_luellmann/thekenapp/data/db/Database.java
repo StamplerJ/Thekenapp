@@ -124,6 +124,7 @@ public class Database {
                         new Bought(1L, 1L, 3),
                         new Bought(1L, 2L, 4),
                         new Bought(1L, 3L, 6),
+                        new Bought(5L, 5L, 5),
                         new Bought(2L, 1L, 2),
                         new Bought(2L, 3L, 0),
                         new Bought(2L, 2L, 18)

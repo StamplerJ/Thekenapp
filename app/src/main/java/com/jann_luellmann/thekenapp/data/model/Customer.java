@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Customer {
+public class Customer implements Comparable<Customer>{
 
     @PrimaryKey(autoGenerate = true)
     private long customerId;
@@ -32,5 +32,10 @@ public class Customer {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Customer c) {
+        return this.name.compareTo(c.getName());
     }
 }

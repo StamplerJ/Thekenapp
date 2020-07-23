@@ -18,6 +18,7 @@ import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment;
 import com.jann_luellmann.thekenapp.util.Prefs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -61,8 +62,8 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
 
         fragmentManager = getFragmentManager();
 
-        setupRecyclerView(binding.drinksList, this.drinks);
-        setupRecyclerView(binding.customerList, this.customers);
+        setupRecyclerView(binding.drinksList, this.drinks, false);
+        setupRecyclerView(binding.customerList, this.customers, false);
 
         binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink()).show(fragmentManager, getString(R.string.drink_tag)));
         binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer()).show(fragmentManager, getString(R.string.customer_tag)));
@@ -74,17 +75,17 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
         // Event setup
         eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
         eventViewModel.findAll().observe(this, events -> {
-            setupRecyclerView(binding.eventList, events);
+            setupRecyclerView(binding.eventList, events, true);
         });
     }
 
-    private <type> void setupRecyclerView(RecyclerView recyclerView, List<type> items) {
+    private <type> void setupRecyclerView(RecyclerView recyclerView, List<type> items, boolean editable) {
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        TextAdapter<type> adapter = new TextAdapter<>();
+        TextAdapter<type> adapter = new TextAdapter<>(editable);
         recyclerView.setAdapter(adapter);
 
         adapter.setData(items, fragmentManager);
@@ -93,7 +94,12 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
     @Override
     public void onEventUpdated(long eventId) {
         if(eventWithDrinksAndCustomersViewModel == null) {
-            eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
+            if(isAdded()) {
+                eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
+            }
+            else {
+                return;
+            }
         }
 
         if(observableData != null && observableData.hasObservers()) {
@@ -105,6 +111,8 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
         this.observableData.observe(this, event -> {
             if(event == null)
                 return;
+
+            Collections.sort(event.getCustomerWithBoughts());
 
             this.drinks.clear();
             this.drinks.addAll(event.getDrinks());

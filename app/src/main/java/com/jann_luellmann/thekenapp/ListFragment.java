@@ -21,6 +21,7 @@ import com.jann_luellmann.thekenapp.view.ListTableViewClickListener;
 import com.jann_luellmann.thekenapp.view.RowHeader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,6 +52,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         tableView = view.findViewById(R.id.tableView);
+        tableView.setIgnoreSelectionColors(true);
         return view;
     }
 
@@ -64,14 +66,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
 
         long eventId = Prefs.getLong(getContext(), Prefs.CURRENT_EVENT, 1L);
         eventWithDrinksAndCustomersViewModel = ViewModelProviders.of(this).get(EventWithDrinksAndCustomersViewModel.class);
-        eventWithDrinksAndCustomersViewModel.findById(eventId).observe(this, event -> {
-            if(event == null)
-                return;
-
-            setData(event);
-
-            this.tableView.setTableViewListener(new ListTableViewClickListener(getContext(), event));
-        });
+        onEventUpdated(eventId);
     }
 
     @Override
@@ -94,6 +89,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
 
             this.adapter.setAllItems(columnHeaderList, rowHeaderList, cellList);
             this.adapter.notifyDataSetChanged();
+            this.tableView.setTableViewListener(new ListTableViewClickListener(getContext(), event));
         });
     }
 
@@ -107,6 +103,9 @@ public class ListFragment extends Fragment implements EventChangedListener {
 
         columnHeaderList.add(new ColumnHeader(getString(R.string.total)));
 
+        float total = 0f;
+
+        Collections.sort(event.getCustomerWithBoughts());
         for (CustomerWithBought customer : event.getCustomerWithBoughts()) {
             rowHeaderList.add(new RowHeader(customer.getCustomer().toString()));
 
@@ -128,8 +127,20 @@ public class ListFragment extends Fragment implements EventChangedListener {
                 }
             }
 
+            total += sum;
             row.add(new Cell(String.format(Locale.GERMAN, "%.2f€", (sum / 100f))));
             cellList.add(row);
         }
+
+        rowHeaderList.add(new RowHeader(getString(R.string.total)));
+
+        // Add total sum of all customers
+        List<Cell> lastRow = new ArrayList<>();
+        for (int i = 0; i < event.getDrinks().size(); i++) {
+            lastRow.add(new Cell(""));
+        }
+        lastRow.add(new Cell(String.format(Locale.GERMAN, "%.2f€", (total / 100f))));
+
+        cellList.add(lastRow);
     }
 }
