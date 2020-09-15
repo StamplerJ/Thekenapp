@@ -1,12 +1,14 @@
 package com.jann_luellmann.thekenapp.dialog;
 
 import android.os.Bundle;
+import android.os.VibrationAttributes;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jann_luellmann.thekenapp.R;
 import com.jann_luellmann.thekenapp.adapter.Entry;
@@ -75,6 +77,8 @@ public class EditEntryDialogFragment extends DialogFragment {
         for (View v : generateInputs(item))
             binding.fieldsHolder.addView(v);
 
+        binding.fieldsHolder.invalidate();
+
         binding.deleteButton.setOnClickListener(b -> deleteEntry());
         binding.cancelButton.setOnClickListener(b -> dismiss());
         binding.saveButton.setOnClickListener(b -> updateEntry());
@@ -137,6 +141,13 @@ public class EditEntryDialogFragment extends DialogFragment {
             Drink drink = (Drink) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 switch (entry.getName()) {
                     case "name":
                         String name = ((EditText) entry.getValue()).getText().toString();
@@ -155,6 +166,13 @@ public class EditEntryDialogFragment extends DialogFragment {
             Customer customer = (Customer) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 if ("name".equals(entry.getName())) {
                     String name = ((EditText) entry.getValue()).getText().toString();
                     customer.setName(TextUtil.FirstLetterUpperCase(name));
@@ -167,13 +185,19 @@ public class EditEntryDialogFragment extends DialogFragment {
             Event event = (Event) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 switch (entry.getName()) {
                     case "name":
-                        String name = ((EditText) entry.getValue()).getText().toString();
-                        event.setName(TextUtil.FirstLetterUpperCase(name));
+                        event.setName(TextUtil.FirstLetterUpperCase(value));
                         break;
                     case "date":
-                        Date date = TextUtil.stringToDate(((EditText) entry.getValue()).getText().toString());
+                        Date date = TextUtil.stringToDate(value);
                         event.setDate(date);
                         break;
                 }

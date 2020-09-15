@@ -19,6 +19,7 @@ import lombok.ToString;
 @Entity(primaryKeys = {"customerId", "drinkId"})
 public class Bought {
 
+    private long eventId;
     private long customerId;
     private long drinkId;
 

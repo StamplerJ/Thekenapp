@@ -24,6 +24,9 @@ public class TextUtil {
     }
 
     public static String FirstLetterUpperCase(String text) {
+        if(text.isEmpty())
+            return text;
+
         String[] parts = text.split(" ");
         if(parts.length == 1)
             return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();

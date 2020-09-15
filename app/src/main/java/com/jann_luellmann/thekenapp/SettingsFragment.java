@@ -62,8 +62,8 @@ public class SettingsFragment extends Fragment implements EventChangedListener {
 
         fragmentManager = getFragmentManager();
 
-        setupRecyclerView(binding.drinksList, this.drinks, false);
-        setupRecyclerView(binding.customerList, this.customers, false);
+        setupRecyclerView(binding.drinksList, this.drinks, true);
+        setupRecyclerView(binding.customerList, this.customers, true);
 
         binding.addDrink.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Drink()).show(fragmentManager, getString(R.string.drink_tag)));
         binding.addCustomer.setOnClickListener(v -> new CreateEntryDialogFragment<>(new Customer()).show(fragmentManager, getString(R.string.customer_tag)));

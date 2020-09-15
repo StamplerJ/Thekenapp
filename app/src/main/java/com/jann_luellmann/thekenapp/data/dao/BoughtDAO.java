@@ -21,9 +21,12 @@ public abstract class BoughtDAO {
     @Query("SELECT * FROM bought WHERE customerId IN (:customerIds)")
     public abstract LiveData<List<Bought>> findAllByCustomerIds(long[] customerIds);
 
+    @Query("SELECT * FROM bought WHERE eventId = :eventId and customerId = :customerId")
+    public abstract LiveData<List<Bought>> findAllByEventAndCustomer(long eventId, long customerId);
+
     @Transaction
-    public void insert(long customerId, long drinkId, int amount) {
-        insert(new Bought(customerId, drinkId, amount));
+    public void insert(long eventId, long customerId, long drinkId, int amount) {
+        insert(new Bought(eventId, customerId, drinkId, amount));
     }
 
     @Insert

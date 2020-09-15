@@ -1,6 +1,7 @@
 package com.jann_luellmann.thekenapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class EventSpinnerAdapter extends ArrayAdapter<Event> {
         Event event = this.events.get(position);
 
         TextView textView = convertView.findViewById(android.R.id.text1);
+        textView.setTextColor(Color.BLACK);
         textView.setText(event.getName());
 
         return convertView;
@@ -50,6 +52,7 @@ public class EventSpinnerAdapter extends ArrayAdapter<Event> {
         Event event = this.events.get(position);
 
         TextView textView = convertView.findViewById(android.R.id.text1);
+        textView.setTextColor(Color.BLACK);
         textView.setText(event.getName());
 
         return convertView;

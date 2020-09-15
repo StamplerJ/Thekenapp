@@ -2,12 +2,18 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "961f770b1c09942f29a90dcb1c4627ce",
+    "identityHash": "0a9db6830fd416b9be945b7cfa817f05",
     "entities": [
       {
         "tableName": "Bought",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER NOT NULL, `drinkId` INTEGER NOT NULL, `amount` INTEGER NOT NULL, PRIMARY KEY(`customerId`, `drinkId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER NOT NULL, `customerId` INTEGER NOT NULL, `drinkId` INTEGER NOT NULL, `amount` INTEGER NOT NULL, PRIMARY KEY(`customerId`, `drinkId`))",
         "fields": [
+          {
+            "fieldPath": "eventId",
+            "columnName": "eventId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "customerId",
             "columnName": "customerId",
@@ -191,7 +197,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '961f770b1c09942f29a90dcb1c4627ce')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a9db6830fd416b9be945b7cfa817f05')"
     ]
   }
 }

@@ -53,6 +53,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         tableView = view.findViewById(R.id.tableView);
         tableView.setIgnoreSelectionColors(true);
+        tableView.setHasFixedWidth(false);
         return view;
     }
 
@@ -114,7 +115,7 @@ public class ListFragment extends Fragment implements EventChangedListener {
             List<Cell> row = new ArrayList<>();
             for (Drink drink : event.getDrinks()) {
                 boolean isBoughtPresent = false;
-                for (Bought bought : customer.getBoughts()) {
+                for (Bought bought : customer.getBoughtsByEvent(event.getEvent().getEventId())) {
                     if(bought.getDrinkId() == drink.getDrinkId()) {
                         sum += bought.getAmount() * drink.getPrice();
                         row.add(new Cell(bought.getAmount()));

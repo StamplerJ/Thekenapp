@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jann_luellmann.thekenapp.R;
 import com.jann_luellmann.thekenapp.adapter.Entry;
@@ -65,6 +66,8 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
         for (View v : generateInputs(item))
             binding.fieldsHolder.addView(v);
 
+        binding.fieldsHolder.invalidate();
+
         binding.deleteButton.setVisibility(View.GONE);
         binding.cancelButton.setOnClickListener(b -> dismiss());
         binding.saveButton.setOnClickListener(b -> createEntry());
@@ -119,13 +122,19 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
             Drink drink = (Drink) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 switch (entry.getName()) {
                     case "name":
-                        String name = ((EditText) entry.getValue()).getText().toString();
-                        drink.setName(TextUtil.FirstLetterUpperCase(name));
+                        drink.setName(TextUtil.FirstLetterUpperCase(value));
                         break;
                     case "price":
-                        long price = Long.parseLong(((EditText) entry.getValue()).getText().toString());
+                        long price = Long.parseLong(value);
                         drink.setPrice(price);
                         break;
                 }
@@ -137,9 +146,15 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
             Customer customer = (Customer) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 if ("name".equals(entry.getName())) {
-                    String name = ((EditText) entry.getValue()).getText().toString();
-                    customer.setName(TextUtil.FirstLetterUpperCase(name));
+                    customer.setName(TextUtil.FirstLetterUpperCase(value));
                 }
             }
 
@@ -149,13 +164,19 @@ public class CreateEntryDialogFragment<T> extends DialogFragment {
             Event event = (Event) item;
 
             for (Entry entry : entries) {
+
+                String value = ((EditText) entry.getValue()).getText().toString();
+                if(value.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.error_fill_fields, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 switch (entry.getName()) {
                     case "name":
-                        String name = ((EditText) entry.getValue()).getText().toString();
-                        event.setName(TextUtil.FirstLetterUpperCase(name));
+                        event.setName(TextUtil.FirstLetterUpperCase(value));
                         break;
                     case "date":
-                        Date date = TextUtil.stringToDate(((EditText) entry.getValue()).getText().toString());
+                        Date date = TextUtil.stringToDate(value);
                         event.setDate(date);
                         break;
                 }

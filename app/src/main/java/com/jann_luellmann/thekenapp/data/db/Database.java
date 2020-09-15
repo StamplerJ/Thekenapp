@@ -101,7 +101,7 @@ public class Database {
                         new EventDrinkCrossRef(1L, 1L),
                         new EventDrinkCrossRef(1L, 2L),
                         new EventDrinkCrossRef(1L, 3L),
-                        new EventDrinkCrossRef(1L, 5L),
+                        new EventDrinkCrossRef(1L, 4L),
                         new EventDrinkCrossRef(2L, 1L),
                         new EventDrinkCrossRef(2L, 2L),
                         new EventDrinkCrossRef(2L, 5L),
@@ -121,13 +121,13 @@ public class Database {
                 );
 
                 getInstance().boughtDAO().insertAll(
-                        new Bought(1L, 1L, 3),
-                        new Bought(1L, 2L, 4),
-                        new Bought(1L, 3L, 6),
-                        new Bought(5L, 5L, 5),
-                        new Bought(2L, 1L, 2),
-                        new Bought(2L, 3L, 0),
-                        new Bought(2L, 2L, 18)
+                        new Bought(1L, 1L, 1L, 3),
+                        new Bought(1L, 1L, 2L, 4),
+                        new Bought(1L, 1L, 3L, 6),
+                        new Bought(1L, 5L, 5L, 5),
+                        new Bought(2L, 2L, 1L, 2),
+                        new Bought(2L, 2L, 3L, 0),
+                        new Bought(2L, 2L, 2L, 18)
                 );
             });
         });

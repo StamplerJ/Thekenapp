@@ -3,6 +3,7 @@ package com.jann_luellmann.thekenapp.data.model.relationship;
 import com.jann_luellmann.thekenapp.data.model.Bought;
 import com.jann_luellmann.thekenapp.data.model.Customer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,17 @@ public class CustomerWithBought implements Comparable<CustomerWithBought> {
             entityColumn = "customerId"
     )
     private List<Bought> boughts;
+
+    public List<Bought> getBoughtsByEvent(long eventId) {
+        List<Bought> boughtsByEvent = new ArrayList<>();
+
+        for (Bought bought : boughts) {
+            if(bought.getEventId() == eventId)
+                boughtsByEvent.add(bought);
+        }
+
+        return boughtsByEvent;
+    }
 
     @NonNull
     @Override
