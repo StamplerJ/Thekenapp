@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
     tools:context=".ListFragment">
 
     <com.evrencoskun.tableview.TableView
         android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/design_default_color_background"
+        android:background="@color/colorAccent"
         app:column_header_height="@dimen/column_header_height"
         app:row_header_width="@dimen/row_header_width"
         app:selected_color="@color/selected_background_color"

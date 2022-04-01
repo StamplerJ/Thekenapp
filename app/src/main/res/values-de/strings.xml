@@ -19,4 +19,10 @@
     <string name="total">Gesamt</string>
     <string name="add">Hinzufügen</string>
     <string name="error_fill_fields">Bitte fülle alle Felder aus</string>
+
+    <!-- Confirm deletion dialog -->
+    <string name="confirm_title">Löschen bestätigen</string>
+    <string name="confirm_message">Sind sie sicher, dass sie diesen Eintrag löschen wollen?</string>
+    <string name="confirm_yes">Ja</string>
+    <string name="confirm_no">Nein</string>
 </resources>

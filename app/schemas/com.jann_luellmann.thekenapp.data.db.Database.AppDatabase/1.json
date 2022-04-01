@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0a9db6830fd416b9be945b7cfa817f05",
+    "identityHash": "310d7267ea379bb02eeb7ae33af22696",
     "entities": [
       {
         "tableName": "Bought",
@@ -45,7 +45,7 @@
       },
       {
         "tableName": "Customer",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customerId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "customerId",
@@ -57,7 +57,7 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -197,7 +197,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a9db6830fd416b9be945b7cfa817f05')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '310d7267ea379bb02eeb7ae33af22696')"
     ]
   }
 }
