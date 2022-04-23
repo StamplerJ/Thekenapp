@@ -7,24 +7,24 @@ import com.jann_luellmann.thekenapp.data.model.EventCustomerCrossRef
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers
 import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel
 
-class EventWithCustomersViewModel : BaseViewModel<EventWithCustomers?>() {
-    override fun findAll(): LiveData<List<EventWithCustomers?>>? {
+class EventWithCustomersViewModel : BaseViewModel<EventWithCustomers>() {
+    override fun findAll(): LiveData<List<EventWithCustomers>> {
         return db.eventWithCustomersDAO().all
     }
 
-    fun findByName(name: String?): LiveData<EventWithCustomers?>? {
+    fun findByName(name: String): LiveData<EventWithCustomers> {
         return db.eventWithCustomersDAO().findByName(name)
     }
 
-    fun findByEvent(event: Event): LiveData<EventWithCustomers?>? {
+    fun findByEvent(event: Event): LiveData<EventWithCustomers> {
         return db.eventWithCustomersDAO().findByName(event.name)
     }
 
-    override fun insert(eventId: Long, eventWithCustomers: EventWithCustomers?) {
+    override fun insert(eventId: Long, eventWithCustomers: EventWithCustomers) {
         //noi
     }
 
-    override fun delete(eventWithCustomers: EventWithCustomers?) {
+    override fun delete(eventWithCustomers: EventWithCustomers) {
         //noi
     }
 

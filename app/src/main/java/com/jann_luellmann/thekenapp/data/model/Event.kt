@@ -13,9 +13,9 @@ data class Event(
     @PrimaryKey(autoGenerate = true)
     var eventId: Long = 0,
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "ename")
     @field:Editable(stringId = R.string.name)
-    var name: String? = null,
+    var name: String = "",
 
     @ColumnInfo(name = "date")
     @field:Editable(stringId = R.string.date)

@@ -24,5 +24,5 @@ class EventWithDrinksAndCustomers {
             EventCustomerCrossRef::class
         )
     )
-    var customerWithBoughts: MutableList<CustomerWithBought> = mutableListOf()
+    var customers: MutableList<Customer> = mutableListOf()
 }

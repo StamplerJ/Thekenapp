@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jann_luellmann.thekenapp.data.dao.*
+import com.jann_luellmann.thekenapp.data.dao.relationship.EventAndCustomerWithDrinksDAO
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithCustomersDAO
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithDrinksAndCustomersDAO
 import com.jann_luellmann.thekenapp.data.dao.relationship.EventWithDrinksDAO
@@ -15,14 +16,13 @@ import java.util.concurrent.Executors
 
 class Database private constructor(context: Context) {
     @androidx.room.Database(
-        entities = [Bought::class, Customer::class, Drink::class, Event::class, EventCustomerCrossRef::class, EventDrinkCrossRef::class],
+        entities = [Customer::class, Drink::class, Event::class, EventCustomerCrossRef::class, EventDrinkCrossRef::class, EventCustomerDrinkCrossRef::class],
         version = 1
     )
     @TypeConverters(
         Converters::class
     )
     abstract class AppDatabase : RoomDatabase() {
-        abstract fun boughtDAO(): BoughtDAO
         abstract fun customerDAO(): CustomerDAO
         abstract fun drinkDAO(): DrinkDAO
         abstract fun eventDAO(): EventDAO
@@ -33,6 +33,7 @@ class Database private constructor(context: Context) {
         abstract fun eventDrinkCrossDAO(): EventDrinkCrossDAO
         abstract fun eventCustomerCrossDAO(): EventCustomerCrossDAO
         abstract fun eventWithDrinksAndCustomersDAO(): EventWithDrinksAndCustomersDAO
+        abstract fun eventAndCustomerWithDrinksDAO(): EventAndCustomerWithDrinksDAO
     }
 
     private fun populateInitialData() {
@@ -55,16 +56,16 @@ class Database private constructor(context: Context) {
                         Customer(8L, "Marie Lindemann"),
                         Customer(9L, "Heinz-Hermann Hansemann Sen.")
                     )
-                    drinkDAO().insertAll(
+                    drinkDAO().insertAllBlocking(
                         Drink(1L, "Wasser", 100),
                         Drink(2L, "Bier, Alster", 150),
                         Drink(3L, "Cola, Fanta, Sprite", 120),
-                        Drink(5L, "Barcadi Cola", 300),
-                        Drink(6L, "Cocktail", 250),
-                        Drink(9L, "Hugo", 200),
-                        Drink(16L, "Cocktail", 250),
-                        Drink(17L, "Charly, Cola-Korn", 250),
-                        Drink(18L, "Charly, Cola-Korn", 300)
+                        Drink(4L, "Barcadi Cola", 300),
+                        Drink(5L, "Cocktail", 250),
+                        Drink(6L, "Hugo", 200),
+                        Drink(7L, "Cocktail", 250),
+                        Drink(8L, "Charly, Cola-Korn", 250),
+                        Drink(9L, "Charly, Cola-Korn", 300)
                     )
                     eventDrinkCrossDAO().insertAll(
                         EventDrinkCrossRef(1L, 1L),
@@ -74,8 +75,8 @@ class Database private constructor(context: Context) {
                         EventDrinkCrossRef(1L, 5L),
                         EventDrinkCrossRef(2L, 1L),
                         EventDrinkCrossRef(2L, 2L),
-                        EventDrinkCrossRef(2L, 5L),
-                        EventDrinkCrossRef(2L, 3L)
+                        EventDrinkCrossRef(2L, 3L),
+                        EventDrinkCrossRef(2L, 5L)
                     )
                     eventCustomerCrossDAO().insertAll(
                         EventCustomerCrossRef(1L, 1L),
@@ -88,14 +89,32 @@ class Database private constructor(context: Context) {
                         EventCustomerCrossRef(2L, 1L),
                         EventCustomerCrossRef(2L, 2L)
                     )
-                    boughtDAO().insertAll(
-                        Bought(1L, 1L, 1L, 3),
-                        Bought(1L, 1L, 2L, 4),
-                        Bought(1L, 1L, 3L, 6),
-                        Bought(1L, 5L, 5L, 5),
-                        Bought(2L, 2L, 1L, 2),
-                        Bought(2L, 2L, 3L, 0),
-                        Bought(2L, 2L, 2L, 18)
+                    eventAndCustomerWithDrinksDAO().insertAll(
+                        EventCustomerDrinkCrossRef(1L, 1L, 1L, 1),
+                        EventCustomerDrinkCrossRef(1L, 1L, 2L, 11),
+                        EventCustomerDrinkCrossRef(1L, 1L, 3L, 12),
+                        EventCustomerDrinkCrossRef(1L, 1L, 4L, 13),
+                        EventCustomerDrinkCrossRef(1L, 1L, 5L, 14),
+                        EventCustomerDrinkCrossRef(1L, 2L, 1L, 1),
+                        EventCustomerDrinkCrossRef(1L, 2L, 2L, 11),
+                        EventCustomerDrinkCrossRef(1L, 2L, 3L, 12),
+                        EventCustomerDrinkCrossRef(1L, 2L, 4L, 13),
+                        EventCustomerDrinkCrossRef(1L, 2L, 5L, 14),
+                        EventCustomerDrinkCrossRef(1L, 3L, 1L, 1),
+                        EventCustomerDrinkCrossRef(1L, 3L, 2L, 11),
+                        EventCustomerDrinkCrossRef(1L, 3L, 3L, 12),
+                        EventCustomerDrinkCrossRef(1L, 3L, 4L, 13),
+                        EventCustomerDrinkCrossRef(1L, 3L, 5L, 14),
+                        EventCustomerDrinkCrossRef(1L, 4L, 1L, 1),
+                        EventCustomerDrinkCrossRef(1L, 4L, 2L, 11),
+                        EventCustomerDrinkCrossRef(1L, 4L, 3L, 12),
+                        EventCustomerDrinkCrossRef(1L, 4L, 4L, 13),
+                        EventCustomerDrinkCrossRef(1L, 4L, 5L, 14),
+                        EventCustomerDrinkCrossRef(1L, 5L, 1L, 1),
+                        EventCustomerDrinkCrossRef(1L, 5L, 2L, 11),
+                        EventCustomerDrinkCrossRef(1L, 5L, 3L, 12),
+                        EventCustomerDrinkCrossRef(1L, 5L, 4L, 13),
+                        EventCustomerDrinkCrossRef(1L, 5L, 5L, 14)
                     )
                 }
             }
@@ -109,14 +128,14 @@ class Database private constructor(context: Context) {
         }
 
         fun getInstance(): AppDatabase {
-            checkNotNull(instance) { "Database has not been initialized. Use initialize(Context context) first" }
+            checkNotNull(instance) { "Database has not been initialized. Use initialize(Context) first" }
             return instance!!
         }
     }
 
     init {
-        context.applicationContext.deleteDatabase("thekenapp-db")
+//        TODO: For development: // context.applicationContext.deleteDatabase("thekenapp-db")
         instance = Room.databaseBuilder(context, AppDatabase::class.java, "thekenapp-db").build()
-        populateInitialData()
+//        TODO: For development: // populateInitialData()
     }
 }

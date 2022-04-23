@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.jann_luellmann.thekenapp.adapter.EventSpinnerAdapter
@@ -15,24 +15,25 @@ import com.jann_luellmann.thekenapp.data.view_model.EventViewModel
 import com.jann_luellmann.thekenapp.util.Prefs
 
 class MainActivity : AppCompatActivity() {
+
     private var isSpinnerInitialized = false
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Database.initialize(this.getApplicationContext())
+        Database.initialize(this.applicationContext)
         setupViewPager()
     }
 
     private fun setupViewPager() {
-        val viewPager: ViewPager = findViewById<ViewPager>(R.id.viewPager)
-        val adapter = ThekenappFragmentPagerAdapter(this, getSupportFragmentManager())
-        val tabLayout: TabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager: ViewPager = findViewById(R.id.viewPager)
+        val adapter = ThekenappFragmentPagerAdapter(this, supportFragmentManager)
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
         viewPager.adapter = adapter
-        val eventViewModel: EventViewModel =
-            ViewModelProviders.of(this).get(EventViewModel::class.java)
-        eventViewModel.findAll()?.observe(this) { events ->
-            val spinner: Spinner = findViewById<Spinner>(R.id.eventSpinner)
+        val eventViewModel: EventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+        eventViewModel.findAll().observe(this) { events ->
+            val spinner: Spinner = findViewById(R.id.eventSpinner)
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     adapterView: AdapterView<*>,

@@ -12,12 +12,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/drinks_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/customer_layout"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -57,7 +59,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/customer_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -67,6 +69,15 @@
             app:layout_constraintStart_toEndOf="@+id/drinks_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0">
+
+            <Button
+                android:id="@+id/add_customer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plus_sign"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/customer_list"
+                app:layout_constraintStart_toStartOf="@+id/customer_list" />
 
             <TextView
                 android:id="@+id/customer_heading"
@@ -92,24 +103,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/customer_heading"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <Button
-                android:id="@+id/add_customer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/plus_sign"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/customer_list"
-                app:layout_constraintStart_toStartOf="@+id/customer_list" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/event_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/customer_layout"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -123,9 +127,8 @@
                 android:text="@string/event_label"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eventSpinner" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/event_list"

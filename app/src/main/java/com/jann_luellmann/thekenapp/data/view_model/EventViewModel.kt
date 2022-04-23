@@ -16,7 +16,7 @@ class EventViewModel : BaseViewModel<Event>() {
         executor.execute { db.eventDAO().update(event) }
     }
 
-    override fun findAll(): LiveData<List<Event>>? {
+    override fun findAll(): LiveData<List<Event>> {
         return db.eventDAO().all
     }
 

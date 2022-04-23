@@ -14,7 +14,6 @@ import com.jann_luellmann.thekenapp.adapter.Entry
 import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.Drink
 import com.jann_luellmann.thekenapp.data.model.Event
-import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought
 import com.jann_luellmann.thekenapp.data.util.Editable
 import com.jann_luellmann.thekenapp.data.view_model.CustomerViewModel
 import com.jann_luellmann.thekenapp.data.view_model.DrinkViewModel
@@ -27,6 +26,8 @@ import com.jann_luellmann.thekenapp.databinding.DialogEntryMoneyBinding
 import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding
 import com.jann_luellmann.thekenapp.util.Prefs
 import com.jann_luellmann.thekenapp.util.TextUtil
+import com.jann_luellmann.thekenapp.util.Util.getStatusBarHeight
+import com.jann_luellmann.thekenapp.util.Util.isTablet
 import java.lang.reflect.Field
 import java.util.*
 
@@ -35,7 +36,7 @@ class EditEntryDialogFragment(
 ) : DialogFragment() {
 
     private lateinit var binding: DialogFragmentEditEntryBinding
-    private val entries: MutableList<Entry> = ArrayList()
+    private val entries: MutableList<Entry> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +49,6 @@ class EditEntryDialogFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val metrics = resources.displayMetrics
-        val width = metrics.widthPixels
-        val height = metrics.heightPixels
-        dialog?.window?.setLayout((width * 0.8f).toInt(), (height * 0.8f).toInt())
 
         binding.title.text = context?.getString(R.string.edit_title)
 
@@ -102,19 +98,18 @@ class EditEntryDialogFragment(
         textView.text = getString(field.getAnnotation(Editable::class.java).stringId)
         try {
             if (valueView is EditText) {
-                val editText = valueView
                 field.isAccessible = true
-                var text: String? = field[item].toString()
+                var text: String? = field[item]?.toString()
 
                 // Handle Date EditText
                 if (field.type == Date::class.java) {
                     text = TextUtil.dateToString(field[item] as Date)
-                    editText.setOnClickListener { view: View? ->
-                        val datePickerFragment = DatePickerFragment(editText)
+                    valueView.setOnClickListener {
+                        val datePickerFragment = DatePickerFragment(valueView)
                         datePickerFragment.show(parentFragmentManager, "datePicker")
                     }
                 }
-                editText.setText(text)
+                valueView.setText(text)
             }
         } catch (e: IllegalAccessException) {
             e.printStackTrace()
@@ -207,16 +202,16 @@ class EditEntryDialogFragment(
 
     override fun onResume() {
         super.onResume()
-        if (showsDialog) {
-            val metrics = resources.displayMetrics
-            val width = metrics.widthPixels
-            val height = metrics.heightPixels
-            dialog?.window?.setLayout((width * 0.6f).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-        }
-    }
+        context?.let {
+            if (showsDialog) {
+                if(!it.isTablet()) {
+                    val metrics = resources.displayMetrics
+                    val width = metrics.widthPixels
+                    val height = metrics.heightPixels - it.getStatusBarHeight()
 
-    init {
-        this.item =
-            if (item is CustomerWithBought) (item as CustomerWithBought).customer!! else item
+                    dialog?.window?.setLayout(width, height)
+                }
+            }
+        }
     }
 }

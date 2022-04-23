@@ -10,9 +10,9 @@ import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinks
 interface EventWithDrinksDAO {
     @get:Query("SELECT * FROM event")
     @get:Transaction
-    val all: LiveData<List<EventWithDrinks?>>?
+    val all: LiveData<List<EventWithDrinks>>
 
     @Transaction
-    @Query("SELECT * FROM event WHERE name LIKE :name LIMIT 1")
-    fun findByName(name: String?): LiveData<EventWithDrinks?>?
+    @Query("SELECT * FROM event WHERE ename LIKE :name LIMIT 1")
+    fun findByName(name: String): LiveData<EventWithDrinks>
 }

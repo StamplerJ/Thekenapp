@@ -2,28 +2,30 @@ package com.jann_luellmann.thekenapp.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.room.OnConflictStrategy.IGNORE
+import androidx.room.OnConflictStrategy.REPLACE
 import com.jann_luellmann.thekenapp.data.model.Customer
 
 @Dao
-abstract class CustomerDAO {
+interface CustomerDAO {
     @get:Query("SELECT * FROM customer")
-    abstract val all: LiveData<List<Customer?>>?
+    val all: LiveData<List<Customer>>
 
     @Query("SELECT * FROM customer WHERE customerId IN (:customerIds)")
-    abstract fun loadAllByIds(customerIds: LongArray?): LiveData<List<Customer?>?>?
+    fun loadAllByIds(customerIds: LongArray): LiveData<List<Customer>>
 
-    @Query("SELECT * FROM customer WHERE name LIKE :name LIMIT 1")
-    abstract fun findByName(name: String?): LiveData<Customer?>?
+    @Query("SELECT * FROM customer WHERE cname LIKE :name LIMIT 1")
+    fun findByName(name: String): LiveData<Customer>
+
+    @Insert(onConflict = REPLACE)
+    fun insert(customer: Customer): Long
 
     @Insert
-    abstract fun insert(customer: Customer?): Long
-
-    @Insert
-    abstract fun insertAll(vararg customers: Customer?)
+    fun insertAll(vararg customers: Customer)
 
     @Update
-    abstract fun update(customer: Customer?)
+    fun update(customer: Customer)
 
     @Delete
-    abstract fun delete(customer: Customer?)
+    fun delete(customer: Customer)
 }

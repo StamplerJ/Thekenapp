@@ -5,20 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jann_luellmann.thekenapp.adapter.TextAdapter
+import com.jann_luellmann.thekenapp.data.db.Database
 import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.Drink
 import com.jann_luellmann.thekenapp.data.model.Event
-import com.jann_luellmann.thekenapp.data.model.relationship.CustomerWithBought
+import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers
+import com.jann_luellmann.thekenapp.data.repository.EventWithDrinksAndCustomersRepository
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel
+import com.jann_luellmann.thekenapp.data.view_model.ViewModelFactory
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel
 import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding
 import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment
@@ -29,11 +30,13 @@ class SettingsFragment : Fragment(), EventChangedListener {
 
     private lateinit var binding: FragmentSettingsBinding
     private var eventViewModel: EventViewModel? = null
-    private var eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel? = null
+    private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel by viewModels {
+        ViewModelFactory(EventWithDrinksAndCustomersRepository(Database.getInstance().eventWithDrinksAndCustomersDAO()))
+    }
     private var observableData: LiveData<EventWithDrinksAndCustomers>? = null
 
     private lateinit var drinksAdapter: TextAdapter<Drink>
-    private lateinit var customersAdapter: TextAdapter<CustomerWithBought>
+    private lateinit var customersAdapter: TextAdapter<Customer>
     private lateinit var eventsAdapter: TextAdapter<Event>
 
     override fun onCreateView(
@@ -55,7 +58,7 @@ class SettingsFragment : Fragment(), EventChangedListener {
         setupRecyclerView(binding.drinksList, drinksAdapter, true)
         setupRecyclerView(binding.customerList, customersAdapter, true)
 
-        binding.addDrink.setOnClickListener { v: View? ->
+        binding.addDrink.setOnClickListener {
             CreateEntryDialogFragment(Drink()).show(
                 parentFragmentManager,
                 getString(R.string.drink_tag)
@@ -98,26 +101,17 @@ class SettingsFragment : Fragment(), EventChangedListener {
     }
 
     override fun onEventUpdated(eventId: Long) {
-        if (eventWithDrinksAndCustomersViewModel == null) {
-            eventWithDrinksAndCustomersViewModel = if (isAdded) {
-                ViewModelProvider(this).get(
-                    EventWithDrinksAndCustomersViewModel::class.java
-                )
-            } else {
-                return
-            }
-        }
         observableData?.let {
             if (it.hasObservers())
                 it.removeObservers(this)
         }
 
-        eventWithDrinksAndCustomersViewModel?.findById(eventId)?.observe(viewLifecycleOwner)
+        eventWithDrinksAndCustomersViewModel.findById(eventId).observe(viewLifecycleOwner)
         { event: EventWithDrinksAndCustomers? ->
             if (event == null) return@observe
-            event.customerWithBoughts.sort()
+            event.customers.sort()
             drinksAdapter.setData(event.drinks)
-            customersAdapter.setData(event.customerWithBoughts)
+            customersAdapter.setData(event.customers)
         }
     }
 }

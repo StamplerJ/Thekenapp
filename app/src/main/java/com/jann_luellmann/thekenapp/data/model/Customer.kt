@@ -11,7 +11,7 @@ data class Customer(
     @PrimaryKey(autoGenerate = true)
     var customerId: Long = 0,
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "cname")
     @field:Editable(stringId = R.string.name)
     var name: String = ""
 ) : Comparable<Customer> {

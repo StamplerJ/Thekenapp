@@ -7,24 +7,24 @@ import com.jann_luellmann.thekenapp.data.model.EventDrinkCrossRef
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinks
 import com.jann_luellmann.thekenapp.data.view_model.BaseViewModel
 
-class EventWithDrinksViewModel : BaseViewModel<EventWithDrinks?>() {
-    override fun findAll(): LiveData<List<EventWithDrinks?>>? {
+class EventWithDrinksViewModel : BaseViewModel<EventWithDrinks>() {
+    override fun findAll(): LiveData<List<EventWithDrinks>> {
         return db.eventWithDrinksDAO().all
     }
 
-    fun findByName(name: String?): LiveData<EventWithDrinks?>? {
+    fun findByName(name: String): LiveData<EventWithDrinks> {
         return db.eventWithDrinksDAO().findByName(name)
     }
 
-    fun findByEvent(event: Event): LiveData<EventWithDrinks?>? {
+    fun findByEvent(event: Event): LiveData<EventWithDrinks> {
         return db.eventWithDrinksDAO().findByName(event.name)
     }
 
-    override fun insert(eventId: Long, eventWithDrinks: EventWithDrinks?) {
+    override fun insert(eventId: Long, eventWithDrinks: EventWithDrinks) {
         //nop
     }
 
-    override fun delete(eventWithDrinks: EventWithDrinks?) {
+    override fun delete(eventWithDrinks: EventWithDrinks) {
         //nop
     }
 

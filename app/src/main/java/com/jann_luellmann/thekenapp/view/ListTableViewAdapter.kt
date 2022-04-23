@@ -79,7 +79,9 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     ) {
         val rowHeaderViewHolder = holder as RowHeaderViewHolder
         rowHeaderViewHolder.rowHeaderTextView.text = rowHeaderItemModel!!.data.toString()
-
+        rowHeaderViewHolder.rowHeaderContainer.setOnClickListener {
+            rowHeaderItemModel.onClick()
+        }
         rowHeadWidth = rowHeaderViewHolder.rowHeaderContainer.layoutParams.width
     }
 

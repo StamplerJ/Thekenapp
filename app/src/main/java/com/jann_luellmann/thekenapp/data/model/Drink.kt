@@ -12,9 +12,9 @@ class Drink(
     @PrimaryKey(autoGenerate = true)
     var drinkId: Long = 0,
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "dname")
     @field:Editable(stringId = R.string.name)
-    var name: String? = null,
+    var name: String = "",
 
     @ColumnInfo(name = "price")
     @field:Editable(stringId = R.string.price)

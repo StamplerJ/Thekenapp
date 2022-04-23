@@ -1,3 +1,3 @@
 package com.jann_luellmann.thekenapp.view
 
-class RowHeader(data: Any?) : Cell(data)
+open class RowHeader(data: Any) : Cell(data)
