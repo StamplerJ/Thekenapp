@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Thekenapp</string>
+    <string name="app_name">DrinkingTab</string>
     <string name="list_heading">List</string>
     <string name="settings_heading">Settings</string>
 
@@ -12,12 +12,20 @@
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="continueText">Continue</string>
+    <string name="create_event">Create event</string>
     <string name="edit_title">Edit</string>
     <string name="label_for_the_edittext" translatable="false">Label for the EditText</string>
     <string name="create_title">Create</string>
     <string name="drink_tag" translatable="false">DRINK</string>
     <string name="customer_tag" translatable="false">CUSTOMER</string>
     <string name="event_tag" translatable="false">EVENT</string>
+
+    <string name="welcome_message_title">"Put it on my tab!"</string>
+    <string name="no_events_message">You have not created any events.\nPlease create on in the Settings tab.</string>
+    <string name="welcome_message">Welcome to the DrinkingTab, a virtual tab to track your customers orders and put them on a digital tab.\n\nCreate events, add your drinks &amp; customers and easily keep track of your earning for the night.\n\nIdeal for clubs, teams und social gatherings!</string>
+    <string name="create_event_message">Create your first event now!</string>
+
 
     <!-- Editable names -->
     <string name="name">Name</string>
@@ -34,5 +42,6 @@
     <string name="confirm_message">Are you sure that you want to delete this item?</string>
     <string name="confirm_yes">Yes</string>
     <string name="confirm_no">No</string>
+    <string name="add_drinks_label">Add\ndrinks</string>
 
 </resources>

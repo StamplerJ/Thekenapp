@@ -6,52 +6,50 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.jann_luellmann.thekenapp.R
-import com.jann_luellmann.thekenapp.adapter.DrinksAdapter
-import com.jann_luellmann.thekenapp.data.view_model.relationship.EventAndCustomerWithDrinksViewModel
-import com.jann_luellmann.thekenapp.databinding.DialogFragmentAddDrinkBinding
+import com.jann_luellmann.thekenapp.data.model.Event
+import com.jann_luellmann.thekenapp.databinding.DialogWelcomeBinding
 import com.jann_luellmann.thekenapp.util.Util.getStatusBarHeight
 import com.jann_luellmann.thekenapp.util.Util.isTablet
 
-class AddDrinkDialogFragment(
-    private val eventAndCustomerWithDrinksViewModel: EventAndCustomerWithDrinksViewModel,
-    private val eventId: Long,
-    private val customerId: Long
-) : DialogFragment(R.layout.dialog_fragment_add_drink) {
+class WelcomeDialog : DialogFragment(R.layout.dialog_fragment_add_drink) {
 
-    private lateinit var binding: DialogFragmentAddDrinkBinding
+    private lateinit var binding: DialogWelcomeBinding
 
-    private var adapter: DrinksAdapter? = null
+    private var continueCounter: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DialogFragmentAddDrinkBinding.inflate(layoutInflater)
+        binding = DialogWelcomeBinding.inflate(layoutInflater)
 
-        binding.title.text = "Customer"
+        binding.continueButton.setOnClickListener {
+            when (continueCounter) {
+                0 -> {
+                    binding.message.text = getString(R.string.create_event_message)
+                    binding.continueButton.text = getString(R.string.create_event)
 
-        createEntries()
-
-        binding.saveButton.setOnClickListener {
-            save()
-            dismiss()
+                    // Weird hack to keep the height - Deadline! TODO: Do this correctly
+                    context?.let {
+                        if (it.isTablet()) {
+                            val height = binding.root.height
+                            dialog?.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, height)
+                        }
+                    }
+                }
+                1 -> {
+                    CreateEntryDialogFragment(Event()).show(
+                        parentFragmentManager,
+                        getString(R.string.event_tag)
+                    )
+                    dismiss()
+                }
+            }
+            continueCounter++
         }
-        binding.cancelButton.setOnClickListener { dismiss() }
 
         return binding.root
-    }
-
-    private fun createEntries() {
-        eventAndCustomerWithDrinksViewModel.findAllByEventAndCustomer(eventId, customerId)
-            .observe(viewLifecycleOwner) {
-                adapter = DrinksAdapter(requireContext(), it)
-                binding.drinksRecyclerView.adapter = adapter
-            }
-    }
-
-    private fun save() {
-        adapter?.saveUpdates(eventAndCustomerWithDrinksViewModel, eventId, customerId)
     }
 
     override fun onResume() {

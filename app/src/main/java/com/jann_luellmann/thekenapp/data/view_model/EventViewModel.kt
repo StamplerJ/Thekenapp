@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import com.jann_luellmann.thekenapp.data.model.Event
 
 class EventViewModel : BaseViewModel<Event>() {
-    fun insert(event: Event) {
-        executor.execute { db.eventDAO().insertAll(event) }
+    fun insert(event: Event): Long {
+        return db.eventDAO().insert(event)
     }
 
     fun insert(events: List<Event>) {
@@ -25,6 +25,11 @@ class EventViewModel : BaseViewModel<Event>() {
     }
 
     override fun delete(event: Event) {
-        executor.execute { db.eventDAO().delete(event) }
+        executor.execute {
+            db.eventDAO().delete(event)
+            db.eventWithDrinksAndCustomersDAO().deleteEventCustomers(event.eventId)
+            db.eventWithDrinksAndCustomersDAO().deleteEventDrinks(event.eventId)
+            db.eventAndCustomerWithDrinksDAO().delete(event.eventId)
+        }
     }
 }

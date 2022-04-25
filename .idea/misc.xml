@@ -3,15 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/drawable-v24/background_customer_row_header.xml" value="0.4585" />
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2075" />
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/drawable/background_customer_row_header.xml" value="0.4585" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout-w600dp/dialog_fragment_edit_entry.xml" value="0.26119791666666664" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout-w720dp/dialog_fragment_edit_entry.xml" value="0.26119791666666664" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/activity_main.xml" value="0.5223958333333333" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_entry_date.xml" value="0.33" />
-        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_entry_drink.xml" value="0.5223958333333333" />
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_entry_drink.xml" value="0.5" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_entry_edittext.xml" value="0.508833922261484" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_entry_money.xml" value="0.33" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_fragment_add_drink.xml" value="0.5" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_fragment_edit_entry.xml" value="0.22" />
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/dialog_welcome.xml" value="0.22" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/fragment_list.xml" value="0.1578125" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/fragment_settings.xml" value="0.1578125" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/table_view_cell_layout.xml" value="0.1578125" />
@@ -21,6 +25,7 @@
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/tablerow.xml" value="0.1578125" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/layout/text_entry.xml" value="0.1578125" />
         <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4875" />
+        <entry key="..\:/Users/jannl/Documents/Allerlei-Spielerei/Android/Projects/Thekenapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2075" />
       </map>
     </option>
   </component>

@@ -3,6 +3,7 @@ package com.jann_luellmann.thekenapp.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -78,8 +79,8 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         rowPosition: Int
     ) {
         val rowHeaderViewHolder = holder as RowHeaderViewHolder
-        rowHeaderViewHolder.rowHeaderTextView.text = rowHeaderItemModel!!.data.toString()
-        rowHeaderViewHolder.rowHeaderContainer.setOnClickListener {
+        rowHeaderViewHolder.rowHeaderButton.text = rowHeaderItemModel!!.data.toString()
+        rowHeaderViewHolder.rowHeaderButton.setOnClickListener {
             rowHeaderItemModel.onClick()
         }
         rowHeadWidth = rowHeaderViewHolder.rowHeaderContainer.layoutParams.width
@@ -113,7 +114,7 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     }
 
     internal inner class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-        val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.row_header_container)
-        val rowHeaderTextView: TextView = itemView.findViewById(R.id.row_header_textView)
+        val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.rowHeaderContainer)
+        val rowHeaderButton: Button = itemView.findViewById(R.id.rowHeaderButton)
     }
 }

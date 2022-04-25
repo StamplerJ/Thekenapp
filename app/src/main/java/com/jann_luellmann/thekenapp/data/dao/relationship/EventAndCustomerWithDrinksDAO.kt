@@ -49,4 +49,7 @@ interface EventAndCustomerWithDrinksDAO {
 
     @Query("UPDATE eventCustomerDrinkCrossRef SET amount = :amount WHERE eventId = :eventId AND customerId = :customerId AND drinkId = :drinkId")
     fun updateAmount(eventId: Long, customerId: Long, drinkId: Long, amount: Int)
+
+    @Query("DELETE FROM eventcustomerdrinkcrossref WHERE eventId = :eventId")
+    fun delete(eventId: Long)
 }

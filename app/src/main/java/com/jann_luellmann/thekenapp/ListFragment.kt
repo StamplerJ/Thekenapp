@@ -15,13 +15,16 @@ import com.jann_luellmann.thekenapp.data.repository.EventWithDrinksAndCustomersR
 import com.jann_luellmann.thekenapp.data.view_model.ViewModelFactory
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventAndCustomerWithDrinksViewModel
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel
+import com.jann_luellmann.thekenapp.databinding.FragmentListBinding
 import com.jann_luellmann.thekenapp.dialog.AddDrinkDialogFragment
 import com.jann_luellmann.thekenapp.util.Prefs
 import com.jann_luellmann.thekenapp.view.*
 import java.util.*
 
 class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener {
-    private lateinit var tableView: TableView
+
+    private lateinit var binding: FragmentListBinding
+
     private var adapter: ListTableViewAdapter = ListTableViewAdapter()
 
     private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel by viewModels {
@@ -50,28 +53,36 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
         savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_list, container, false)
-        tableView = view.findViewById(R.id.tableView)
-        tableView.isIgnoreSelectionColors = true
-        tableView.setHasFixedWidth(false)
-        adapter.tableView = tableView
+        binding = FragmentListBinding.bind(view)
+
+        binding.tableView.isIgnoreSelectionColors = true
+        binding.tableView.setHasFixedWidth(false)
+        adapter.tableView = binding.tableView
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tableView.setAdapter(adapter)
+
+        binding.tableView.setAdapter(adapter)
         adapter.setAllItems(columnHeaderList, rowHeaderList, cellList)
-        val eventId: Long = Prefs.getLong(context, Prefs.CURRENT_EVENT, 1L)
+
+        val eventId: Long = Prefs.getCurrentEvent(view.context)
         onEventUpdated(eventId)
 
-        tableView.tableViewListener = ListTableViewClickListener(requireContext(), this)
+        binding.tableView.tableViewListener = ListTableViewClickListener()
     }
 
     override fun onEventUpdated(eventId: Long) {
         eventWithDrinksAndCustomersViewModel.findById(eventId)
             .observe(viewLifecycleOwner) { event ->
-                if(event == null)
+                if (event == null) {
+                    binding.noEventsMessage.visibility = View.VISIBLE
                     return@observe
+                }
+
+                binding.noEventsMessage.visibility = View.GONE
 
                 columnHeaderList.clear()
                 event.drinks.sortedBy { it.name }.forEach {
@@ -115,46 +126,26 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
                 cellList.add(row)
             }
 
-        rowHeaderList.add(RowHeader(getString(R.string.total)))
+        if (event.isNotEmpty()) {
+            rowHeaderList.add(RowHeader(getString(R.string.total)))
 
-//        for (customer in event.customerWithBoughts) {
-
-//            var sum = 0f
-//            val row: MutableList<Cell> = ArrayList()
-//            for (drink in event.drinks) {
-//                var isBoughtPresent = false
-//                for (bought in customer.getBoughtsByEvent(event.event?.eventId ?: -1)) {
-//                    if (bought.drink.drinkId == drink.drinkId) {
-//                        sum += bought.amount * drink.price
-//                        row.add(Cell(bought.amount))
-//                        isBoughtPresent = true
-//                        break
-//                    }
-//                }
-//                if (!isBoughtPresent) {
-//                    row.add(Cell(0))
-//                }
-//            }
-//            total += sum
-//            row.add(Cell(String.format(Locale.GERMAN, "%.2f€", sum / 100f)))
-//            cellList.add(row)
-//        }
-//        rowHeaderList.add(RowHeader(getString(R.string.total)))
-
-        // Add last row with total sum of all customers
-        cellList.add(mutableListOf<Cell>().apply {
-            repeat(columnHeaderList.size - 1) { add(Cell("")) }
-            add(Cell(String.format(Locale.GERMAN, "%.2f€", total / 100f)))
-        })
+            // Add last row with total sum of all customers
+            cellList.add(mutableListOf<Cell>().apply {
+                repeat(columnHeaderList.size - 1) { add(Cell("")) }
+                add(Cell(String.format(Locale.GERMAN, "%.2f€", total / 100f)))
+            })
+        }
     }
 
     override fun onCustomerClicked(customer: Customer) {
-        val eventId = Prefs.getLong(context, Prefs.CURRENT_EVENT, 1L)
-        val dialog = AddDrinkDialogFragment(
-            eventAndCustomerWithDrinksViewModel,
-            eventId,
-            customer.customerId
-        )
-        dialog.show(parentFragmentManager, "AddDrink")
+        context?.let {
+            val eventId = Prefs.getCurrentEvent(it)
+            val dialog = AddDrinkDialogFragment(
+                eventAndCustomerWithDrinksViewModel,
+                eventId,
+                customer.customerId
+            )
+            dialog.show(parentFragmentManager, "AddDrink")
+        }
     }
 }

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryLight">#AA008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="lightText">#FFFFE0</color>
+    <color name="white">#FFFFFF</color>
 
     <!-- Below is from wiki: https://github.com/evrencoskun/TableView/wiki/1.3.-Creating-Layouts -->
     <color name="cell_background_color">#ffffff</color>
     <color name="header_line_color">#0a0a0a</color>
     <color name="table_view_default_text_color">#0a0a0a</color>
+    <color name="customer_row_header_border">#FFFFAA</color>
 
     <!-- Below is from sample app: https://github.com/evrencoskun/TableViewSampleApp/blob/master/app/src/main/res/values/colors.xml -->
     <color name="selected_background_color">#15a4fa</color>

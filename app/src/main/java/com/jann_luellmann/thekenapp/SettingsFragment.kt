@@ -15,7 +15,6 @@ import com.jann_luellmann.thekenapp.data.db.Database
 import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.Drink
 import com.jann_luellmann.thekenapp.data.model.Event
-import com.jann_luellmann.thekenapp.data.model.relationship.EventWithCustomers
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers
 import com.jann_luellmann.thekenapp.data.repository.EventWithDrinksAndCustomersRepository
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel
@@ -24,14 +23,17 @@ import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinks
 import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding
 import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment
 import com.jann_luellmann.thekenapp.util.Prefs
-import java.util.*
 
 class SettingsFragment : Fragment(), EventChangedListener {
 
     private lateinit var binding: FragmentSettingsBinding
     private var eventViewModel: EventViewModel? = null
     private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel by viewModels {
-        ViewModelFactory(EventWithDrinksAndCustomersRepository(Database.getInstance().eventWithDrinksAndCustomersDAO()))
+        ViewModelFactory(
+            EventWithDrinksAndCustomersRepository(
+                Database.getInstance().eventWithDrinksAndCustomersDAO()
+            )
+        )
     }
     private var observableData: LiveData<EventWithDrinksAndCustomers>? = null
 
@@ -64,18 +66,18 @@ class SettingsFragment : Fragment(), EventChangedListener {
                 getString(R.string.drink_tag)
             )
         }
-        binding.addCustomer.setOnClickListener { v: View? ->
+        binding.addCustomer.setOnClickListener {
             CreateEntryDialogFragment(
                 Customer()
             ).show(parentFragmentManager, getString(R.string.customer_tag))
         }
-        binding.addEvent.setOnClickListener { v: View? ->
+        binding.addEvent.setOnClickListener {
             CreateEntryDialogFragment(Event()).show(
                 parentFragmentManager,
                 getString(R.string.event_tag)
             )
         }
-        val eventId: Long = Prefs.getLong(context, Prefs.CURRENT_EVENT, 1L)
+        val eventId: Long = Prefs.getCurrentEvent(view.context)
         onEventUpdated(eventId)
 
         // Event setup
@@ -106,12 +108,18 @@ class SettingsFragment : Fragment(), EventChangedListener {
                 it.removeObservers(this)
         }
 
-        eventWithDrinksAndCustomersViewModel.findById(eventId).observe(viewLifecycleOwner)
-        { event: EventWithDrinksAndCustomers? ->
-            if (event == null) return@observe
-            event.customers.sort()
-            drinksAdapter.setData(event.drinks)
-            customersAdapter.setData(event.customers)
-        }
+        eventWithDrinksAndCustomersViewModel.findById(eventId)
+            .observe(viewLifecycleOwner) { event: EventWithDrinksAndCustomers? ->
+
+                binding.addDrink.isEnabled = event != null
+                binding.addCustomer.isEnabled = event != null
+
+                if (event == null)
+                    return@observe
+
+                event.customers.sort()
+                drinksAdapter.setData(event.drinks)
+                customersAdapter.setData(event.customers)
+            }
     }
 }

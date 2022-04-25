@@ -11,7 +11,6 @@
         android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
         app:column_header_height="@dimen/column_header_height"
         app:row_header_width="@dimen/row_header_width"
         app:selected_color="@color/selected_background_color"
@@ -19,5 +18,16 @@
         app:unselected_color="@color/design_default_color_background"
         app:allow_click_inside_cell="false"
         app:allow_click_inside_row_header="true"/>
+
+    <TextView
+        android:id="@+id/noEventsMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/no_events_message"
+        android:textColor="@color/lightText"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        />
 
 </FrameLayout>

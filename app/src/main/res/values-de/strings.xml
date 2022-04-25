@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Thekenapp</string>
+    <string name="app_name">GetränkeListe</string>
     <string name="list_heading">Liste</string>
     <string name="settings_heading">Einstellungen</string>
     <string name="drinks_label">Getränke</string>
@@ -9,6 +9,8 @@
     <string name="edit">Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
+    <string name="continueText">Weiter</string>
+    <string name="create_event">Veranstaltung anlegen</string>
     <string name="edit_title">Ändern</string>
     <string name="create_title">Erstellen</string>
     <string name="name">Name</string>
@@ -20,9 +22,15 @@
     <string name="add">Hinzufügen</string>
     <string name="error_fill_fields">Bitte fülle alle Felder aus</string>
 
+    <string name="welcome_message_title">"Schreibs auf meinen Deckel!"</string>
+    <string name="no_events_message">Sie haben noch keine Veranstaltungen angelegt.\nBitte legen Sie welche im Einstellungsmenü an.</string>
+    <string name="welcome_message">Willkommen in der GetränkeListe, ein virtueller Bierdeckel um alle Bestellungen in einer übersichtlichen Liste zu speichern.\n\nLege Veranstaltungen an, füge Getränke &amp; Kunden hinzu und verfolge ganz einfach noch offene Beträge.\n\nIdeal für Vereine, Mannschaften und sonstige Treffen!</string>
+    <string name="create_event_message">Lege jetzt deine erste Verantstaltung an!</string>
+
     <!-- Confirm deletion dialog -->
     <string name="confirm_title">Löschen bestätigen</string>
     <string name="confirm_message">Sind sie sicher, dass sie diesen Eintrag löschen wollen?</string>
     <string name="confirm_yes">Ja</string>
     <string name="confirm_no">Nein</string>
+    <string name="add_drinks_label">Getränke\nhinzufügen</string>
 </resources>

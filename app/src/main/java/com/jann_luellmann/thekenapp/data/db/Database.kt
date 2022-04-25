@@ -134,8 +134,10 @@ class Database private constructor(context: Context) {
     }
 
     init {
-//        TODO: For development: // context.applicationContext.deleteDatabase("thekenapp-db")
+//        TODO: For development:
+      context.applicationContext.deleteDatabase("thekenapp-db")
         instance = Room.databaseBuilder(context, AppDatabase::class.java, "thekenapp-db").build()
-//        TODO: For development: // populateInitialData()
+//        TODO: For development:
+      populateInitialData()
     }
 }

@@ -174,16 +174,18 @@ class EditEntryDialogFragment(
     }
 
     private fun deleteEntry() {
-        val eventId = Prefs.getLong(context, Prefs.CURRENT_EVENT, 0L)
-        when (item) {
-            is Drink -> {
-                EventWithDrinksViewModel().delete(eventId, item as Drink)
-            }
-            is Customer -> {
-                EventWithCustomersViewModel().delete(eventId, item as Customer)
-            }
-            is Event -> {
-                EventViewModel().delete(item as Event)
+        context?.let {
+            val eventId = Prefs.getCurrentEvent(it)
+            when (item) {
+                is Drink -> {
+                    EventWithDrinksViewModel().delete(eventId, item as Drink)
+                }
+                is Customer -> {
+                    EventWithCustomersViewModel().delete(eventId, item as Customer)
+                }
+                is Event -> {
+                    EventViewModel().delete(item as Event)
+                }
             }
         }
     }

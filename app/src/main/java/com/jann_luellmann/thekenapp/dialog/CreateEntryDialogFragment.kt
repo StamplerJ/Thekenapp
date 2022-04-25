@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.jann_luellmann.thekenapp.MainActivity
 import com.jann_luellmann.thekenapp.R
 import com.jann_luellmann.thekenapp.adapter.Entry
 import com.jann_luellmann.thekenapp.data.model.Customer
@@ -28,6 +29,7 @@ import com.jann_luellmann.thekenapp.util.Util.getStatusBarHeight
 import com.jann_luellmann.thekenapp.util.Util.isTablet
 import java.lang.reflect.Field
 import java.util.*
+import java.util.concurrent.Executors
 
 class CreateEntryDialogFragment<T>(
     private val item: T
@@ -98,51 +100,61 @@ class CreateEntryDialogFragment<T>(
     }
 
     private fun createEntry() {
-        val eventId = Prefs.getLong(context, Prefs.CURRENT_EVENT, 1L)
-        when (item) {
-            is Drink -> {
-                val drink = item as Drink
-                for (entry in entries) {
-                    val value = (entry.value as EditText).text.toString()
-                    if (value.isEmpty()) {
-                        Toast.makeText(context, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
-                        return
+        context?.let {
+            val eventId = Prefs.getCurrentEvent(it)
+            when (item) {
+                is Drink -> {
+                    val drink = item as Drink
+                    for (entry in entries) {
+                        val value = (entry.value as EditText).text.toString()
+                        if (value.isEmpty()) {
+                            Toast.makeText(it, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
+                            return
+                        }
+                        when (entry.name) {
+                            "name" -> drink.name = TextUtil.FirstLetterUpperCase(value)
+                            "price" -> drink.price = value.toLong()
+                        }
                     }
-                    when (entry.name) {
-                        "name" -> drink.name = TextUtil.FirstLetterUpperCase(value)
-                        "price" -> drink.price = value.toLong()
+                    DrinkViewModel().insert(eventId, drink)
+                }
+                is Customer -> {
+                    val customer = item as Customer
+                    for (entry in entries) {
+                        val value = (entry.value as EditText).text.toString()
+                        if (value.isEmpty()) {
+                            Toast.makeText(it, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
+                            return
+                        }
+                        if ("name" == entry.name) {
+                            customer.name = TextUtil.FirstLetterUpperCase(value)
+                        }
+                    }
+                    CustomerViewModel().insert(eventId, customer)
+                }
+                is Event -> {
+                    val event = item as Event
+                    for (entry in entries) {
+                        val value = (entry.value as EditText).text.toString()
+                        if (value.isEmpty()) {
+                            Toast.makeText(it, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
+                            return
+                        }
+                        when (entry.name) {
+                            "name" -> event.name = TextUtil.FirstLetterUpperCase(value)
+                            "date" -> event.date = TextUtil.stringToDate(value)
+                        }
+                    }
+                    Executors.newSingleThreadExecutor().execute {
+                        val newEventId = EventViewModel().insert(event)
+                        Prefs.putCurrentEvent(it, newEventId)
+
+                        // Update current event in MainActivity
+                        if(it is MainActivity) {
+                            it.updateCurrentEvent(newEventId)
+                        }
                     }
                 }
-                DrinkViewModel().insert(eventId, drink)
-            }
-            is Customer -> {
-                val customer = item as Customer
-                for (entry in entries) {
-                    val value = (entry.value as EditText).text.toString()
-                    if (value.isEmpty()) {
-                        Toast.makeText(context, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
-                        return
-                    }
-                    if ("name" == entry.name) {
-                        customer.name = TextUtil.FirstLetterUpperCase(value)
-                    }
-                }
-                CustomerViewModel().insert(eventId, customer)
-            }
-            is Event -> {
-                val event = item as Event
-                for (entry in entries) {
-                    val value = (entry.value as EditText).text.toString()
-                    if (value.isEmpty()) {
-                        Toast.makeText(context, R.string.error_fill_fields, Toast.LENGTH_LONG).show()
-                        return
-                    }
-                    when (entry.name) {
-                        "name" -> event.name = TextUtil.FirstLetterUpperCase(value)
-                        "date" -> event.date = TextUtil.stringToDate(value)
-                    }
-                }
-                EventViewModel().insert(event)
             }
         }
         dismiss()

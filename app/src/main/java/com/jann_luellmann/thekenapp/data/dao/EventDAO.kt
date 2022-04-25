@@ -17,7 +17,7 @@ interface EventDAO {
     fun findByName(name: String): LiveData<Event>
 
     @Insert
-    suspend fun insert(event: Event): Long
+    fun insert(event: Event): Long
 
     @Insert
     fun insertAll(vararg events: Event)

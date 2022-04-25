@@ -9,22 +9,25 @@
         android:id="@+id/decrease1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/drinkName"
         android:layout_marginHorizontal="8dp"
-        android:text="- 1"/>
+        android:paddingVertical="16dp"
+        android:text="- 1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/drinkName"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginHorizontal="8dp"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
         android:gravity="center"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintBottom_toBottomOf="@id/decrease1"
+        app:layout_constraintEnd_toStartOf="@+id/drinkAmount"
         app:layout_constraintStart_toEndOf="@+id/decrease1"
         app:layout_constraintTop_toTopOf="@id/decrease1"
-        app:layout_constraintEnd_toStartOf="@id/drinkAmount"
         tools:text="Bier" />
 
     <TextView
@@ -32,10 +35,14 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginHorizontal="8dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:gravity="center"
+        android:maxWidth="120dp"
         app:layout_constraintBottom_toBottomOf="@id/decrease1"
+        app:layout_constraintEnd_toStartOf="@+id/increase1"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/drinkName"
-        app:layout_constraintEnd_toStartOf="@id/increase1"
         app:layout_constraintTop_toTopOf="@id/decrease1"
         tools:text="10" />
 
@@ -43,20 +50,21 @@
         android:id="@+id/increase1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/drinkName"
-        app:layout_constraintStart_toEndOf="@id/drinkAmount"
-        app:layout_constraintEnd_toStartOf="@id/increase10"
         android:layout_marginHorizontal="8dp"
-        android:text="+ 1"/>
+        android:layout_marginEnd="8dp"
+        android:paddingVertical="16dp"
+        android:text="+ 1"
+        app:layout_constraintEnd_toStartOf="@id/increase10"
+        app:layout_constraintTop_toTopOf="@id/drinkName" />
 
     <Button
         android:id="@+id/increase10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
+        android:paddingVertical="16dp"
+        android:text="+ 10"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/increase1"
-        app:layout_constraintTop_toTopOf="@id/drinkName"
-        android:text="+ 10" />
+        app:layout_constraintTop_toTopOf="@id/drinkName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

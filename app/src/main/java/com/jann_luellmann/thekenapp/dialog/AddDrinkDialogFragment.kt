@@ -29,8 +29,6 @@ class AddDrinkDialogFragment(
     ): View {
         binding = DialogFragmentAddDrinkBinding.inflate(layoutInflater)
 
-        binding.title.text = "Customer"
-
         createEntries()
 
         binding.saveButton.setOnClickListener {
@@ -45,6 +43,7 @@ class AddDrinkDialogFragment(
     private fun createEntries() {
         eventAndCustomerWithDrinksViewModel.findAllByEventAndCustomer(eventId, customerId)
             .observe(viewLifecycleOwner) {
+                binding.title.text = it[0].customer.name
                 adapter = DrinksAdapter(requireContext(), it)
                 binding.drinksRecyclerView.adapter = adapter
             }
