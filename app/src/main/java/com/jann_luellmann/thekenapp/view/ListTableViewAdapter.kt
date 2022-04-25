@@ -3,7 +3,6 @@ package com.jann_luellmann.thekenapp.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -68,9 +67,18 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     }
 
     override fun onCreateRowHeaderViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder {
-        val layout: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.table_view_row_header_layout, parent, false)
-        return RowHeaderViewHolder(layout)
+        return when (viewType) {
+            ROW_HEADER_TEXT -> {
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.table_view_row_header_layout, parent, false)
+                RowHeaderViewHolder(view)
+            }
+            else -> {
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.table_view_customer_row_header_layout, parent, false)
+                RowHeaderCustomerViewHolder(view)
+            }
+        }
     }
 
     override fun onBindRowHeaderViewHolder(
@@ -78,12 +86,15 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         rowHeaderItemModel: RowHeader?,
         rowPosition: Int
     ) {
-        val rowHeaderViewHolder = holder as RowHeaderViewHolder
-        rowHeaderViewHolder.rowHeaderButton.text = rowHeaderItemModel!!.data.toString()
-        rowHeaderViewHolder.rowHeaderButton.setOnClickListener {
-            rowHeaderItemModel.onClick()
+        rowHeaderItemModel?.let {
+            if (holder is RowHeaderViewHolder) {
+                holder.bind(rowHeaderItemModel)
+                rowHeadWidth = holder.rowHeaderContainer.layoutParams.width
+            } else if (holder is RowHeaderCustomerViewHolder) {
+                holder.bind(it)
+                rowHeadWidth = holder.rowHeaderContainer.layoutParams.width
+            }
         }
-        rowHeadWidth = rowHeaderViewHolder.rowHeaderContainer.layoutParams.width
     }
 
     override fun onCreateCornerView(parent: ViewGroup): View {
@@ -96,7 +107,10 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     }
 
     override fun getRowHeaderItemViewType(position: Int): Int {
-        return 0
+        return when (mRowHeaderItems[position]) {
+            is RowHeaderCustomer -> ROW_HEADER_CUSTOMER
+            else -> ROW_HEADER_TEXT
+        }
     }
 
     override fun getCellItemViewType(position: Int): Int {
@@ -109,12 +123,35 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     }
 
     internal inner class ColumnHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-        val columnHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.column_header_container)
+        val columnHeaderContainer: ConstraintLayout =
+            itemView.findViewById(R.id.column_header_container)
         val columnHeaderTextView: TextView = itemView.findViewById(R.id.column_header_textView)
     }
 
     internal inner class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.rowHeaderContainer)
-        val rowHeaderButton: Button = itemView.findViewById(R.id.rowHeaderButton)
+        private val rowHeaderTextView: TextView = itemView.findViewById(R.id.rowHeaderTextView)
+
+        fun bind(rowHeaderItemModel: RowHeader) {
+            rowHeaderTextView.text = rowHeaderItemModel.data.toString()
+        }
+    }
+
+    internal inner class RowHeaderCustomerViewHolder(itemView: View) :
+        AbstractViewHolder(itemView) {
+        val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.rowHeaderContainer)
+        private val rowHeaderButton: TextView = itemView.findViewById(R.id.rowHeaderButton)
+
+        fun bind(rowHeaderItemModel: RowHeader) {
+            rowHeaderButton.text = rowHeaderItemModel.data.toString()
+            rowHeaderButton.setOnClickListener {
+                rowHeaderItemModel.onClick()
+            }
+        }
+    }
+
+    companion object {
+        val ROW_HEADER_CUSTOMER = 0
+        val ROW_HEADER_TEXT = 1
     }
 }

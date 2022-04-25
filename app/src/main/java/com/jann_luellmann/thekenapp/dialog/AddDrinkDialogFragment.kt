@@ -28,6 +28,11 @@ class AddDrinkDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         binding = DialogFragmentAddDrinkBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         createEntries()
 
@@ -36,8 +41,6 @@ class AddDrinkDialogFragment(
             dismiss()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
-
-        return binding.root
     }
 
     private fun createEntries() {
