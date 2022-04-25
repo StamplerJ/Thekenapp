@@ -24,12 +24,14 @@ import com.jann_luellmann.thekenapp.databinding.DialogEntryMoneyBinding
 import com.jann_luellmann.thekenapp.databinding.DialogFragmentEditEntryBinding
 import com.jann_luellmann.thekenapp.util.Prefs
 import com.jann_luellmann.thekenapp.util.TextUtil
-import com.jann_luellmann.thekenapp.util.Util
 import com.jann_luellmann.thekenapp.util.Util.getStatusBarHeight
 import com.jann_luellmann.thekenapp.util.Util.isTablet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.reflect.Field
 import java.util.*
-import java.util.concurrent.Executors
 
 class CreateEntryDialogFragment<T>(
     private val item: T
@@ -90,9 +92,8 @@ class CreateEntryDialogFragment<T>(
 
         // Handle Date EditText
         if (field.type == Date::class.java && valueView is EditText) {
-            val editText = valueView
-            editText.setOnClickListener {
-                val newFragment = DatePickerFragment(editText)
+            valueView.setOnClickListener {
+                val newFragment = DatePickerFragment(valueView)
                 newFragment.show(parentFragmentManager, "datePicker")
             }
         }
@@ -145,16 +146,17 @@ class CreateEntryDialogFragment<T>(
                             "date" -> event.date = TextUtil.stringToDate(value)
                         }
                     }
-                    Executors.newSingleThreadExecutor().execute {
+                    CoroutineScope(Dispatchers.IO).launch {
                         val newEventId = EventViewModel().insert(event)
                         Prefs.putCurrentEvent(it, newEventId)
 
                         // Update current event in MainActivity
-                        if(it is MainActivity) {
+                        if (it is MainActivity) {
                             it.updateCurrentEvent(newEventId)
                         }
                     }
                 }
+                else -> {}
             }
         }
         dismiss()
@@ -164,7 +166,7 @@ class CreateEntryDialogFragment<T>(
         super.onResume()
         context?.let {
             if (showsDialog) {
-                if(!it.isTablet()) {
+                if (!it.isTablet()) {
                     val metrics = resources.displayMetrics
                     val width = metrics.widthPixels
                     val height = metrics.heightPixels - it.getStatusBarHeight()

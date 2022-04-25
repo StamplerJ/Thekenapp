@@ -18,8 +18,6 @@ import com.jann_luellmann.thekenapp.util.Prefs
 
 class MainActivity : AppCompatActivity() {
 
-    private val IS_EVENT_PRESENT = "IsEventPresent"
-
     val adapter = ThekenappFragmentPagerAdapter(this, supportFragmentManager)
     private var isSpinnerInitialized = false
 
@@ -88,8 +86,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateCurrentEvent(eventId: Long) {
+        Prefs.putCurrentEvent(applicationContext, eventId)
+
         runOnUiThread {
-            Prefs.putCurrentEvent(applicationContext, eventId)
+            adapter.notifyDataSetChanged()
             adapter.listFragment?.onEventUpdated(eventId)
             adapter.settingsFragment?.onEventUpdated(eventId)
         }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.jann_luellmann.thekenapp.data.model.Event
 
 class EventViewModel : BaseViewModel<Event>() {
-    fun insert(event: Event): Long {
+    suspend fun insert(event: Event): Long {
         return db.eventDAO().insert(event)
     }
 
@@ -21,7 +21,7 @@ class EventViewModel : BaseViewModel<Event>() {
     }
 
     override fun insert(eventId: Long, event: Event) {
-        insert(event)
+//        insert(event)
     }
 
     override fun delete(event: Event) {

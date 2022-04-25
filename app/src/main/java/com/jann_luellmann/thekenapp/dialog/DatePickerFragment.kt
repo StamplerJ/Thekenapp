@@ -8,9 +8,7 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import java.util.*
 
-class DatePickerFragment(dateEditText: EditText?) : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
-    private val dateEditText: EditText? = dateEditText
+class DatePickerFragment(private val dateEditText: EditText) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()
@@ -21,7 +19,7 @@ class DatePickerFragment(dateEditText: EditText?) : DialogFragment(), DatePicker
     }
 
     override fun onDateSet(datePicker: DatePicker, year: Int, month: Int, day: Int) {
-        dateEditText?.setText(
+        dateEditText.setText(
             String.format(
                 Locale.GERMANY,
                 "%d.%d.%d",

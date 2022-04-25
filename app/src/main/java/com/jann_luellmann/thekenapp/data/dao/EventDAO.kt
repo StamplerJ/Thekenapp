@@ -2,6 +2,7 @@ package com.jann_luellmann.thekenapp.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.Drink
 import com.jann_luellmann.thekenapp.data.model.Event
 
@@ -16,7 +17,7 @@ interface EventDAO {
     @Query("SELECT * FROM event WHERE ename LIKE :name LIMIT 1")
     fun findByName(name: String): LiveData<Event>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(event: Event): Long
 
     @Insert
