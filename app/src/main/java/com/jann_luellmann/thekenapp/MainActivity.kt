@@ -7,24 +7,29 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.size
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.jann_luellmann.thekenapp.adapter.EventSpinnerAdapter
 import com.jann_luellmann.thekenapp.data.db.Database
 import com.jann_luellmann.thekenapp.data.model.Event
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel
+import com.jann_luellmann.thekenapp.databinding.ActivityMainBinding
 import com.jann_luellmann.thekenapp.dialog.WelcomeDialog
 import com.jann_luellmann.thekenapp.util.Prefs
 
 class MainActivity : AppCompatActivity() {
 
-    val adapter = ThekenappFragmentPagerAdapter(this, supportFragmentManager)
+    private lateinit var binding: ActivityMainBinding
+    val adapter = DrinkingListFragmentPagerAdapter(supportFragmentManager, lifecycle)
+
     private var isSpinnerInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         Database.initialize(this.applicationContext)
+
         welcomeMessage()
         setupViewPager()
     }
@@ -38,10 +43,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        val viewPager: ViewPager = findViewById(R.id.viewPager)
-        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
-        tabLayout.setupWithViewPager(viewPager)
-        viewPager.adapter = adapter
+        binding.viewPager.adapter = adapter
+        binding.viewPager.isUserInputEnabled = false
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text =
+                if (position == 0) getString(R.string.list_heading) else getString(R.string.settings_heading)
+        }.attach()
+
         val eventViewModel: EventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
         eventViewModel.findAll().observe(this) { events ->
             val spinner: Spinner = findViewById(R.id.eventSpinner)
@@ -90,8 +99,8 @@ class MainActivity : AppCompatActivity() {
 
         runOnUiThread {
             adapter.notifyDataSetChanged()
-            adapter.listFragment?.onEventUpdated(eventId)
-            adapter.settingsFragment?.onEventUpdated(eventId)
+            adapter.listFragment.onEventUpdated(eventId)
+            adapter.settingsFragment.onEventUpdated(eventId)
         }
     }
 }
