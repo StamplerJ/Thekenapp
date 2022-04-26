@@ -1,5 +1,6 @@
 package com.jann_luellmann.thekenapp.dialog
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,11 +37,26 @@ class AddDrinkDialogFragment(
 
         createEntries()
 
+        binding.paidButton.setOnClickListener {
+            pay()
+        }
         binding.saveButton.setOnClickListener {
             save()
             dismiss()
         }
         binding.cancelButton.setOnClickListener { dismiss() }
+    }
+
+    private fun pay() {
+        AlertDialog.Builder(context).apply {
+            setTitle(R.string.confirm_pay_title)
+            setMessage(R.string.confirm_pay_message)
+            setPositiveButton(R.string.confirm_yes) { _, _ ->
+                adapter?.resetAmountToZero(eventAndCustomerWithDrinksViewModel, eventId, customerId)
+                dismiss()
+            }
+            setNegativeButton(R.string.confirm_no) { _, _ -> dismiss() }
+        }.show()
     }
 
     private fun createEntries() {

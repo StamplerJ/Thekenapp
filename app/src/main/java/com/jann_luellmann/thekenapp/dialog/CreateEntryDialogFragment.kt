@@ -28,7 +28,6 @@ import com.jann_luellmann.thekenapp.util.Util.getStatusBarHeight
 import com.jann_luellmann.thekenapp.util.Util.isTablet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.reflect.Field
 import java.util.*
@@ -50,12 +49,21 @@ class CreateEntryDialogFragment<T>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.title.text = context?.getString(R.string.create_title) ?: "Empty Title"
+
+        binding.title.text = context?.getString(
+            when (item) {
+                is Drink -> R.string.create_drink_label
+                is Customer -> R.string.create_customer_label
+                is Event -> R.string.create_event_label
+                else -> R.string.create_title
+            }
+        ) ?: "Create"
+
         for (v in generateInputs(item as Any)) binding.fieldsHolder.addView(v)
         binding.fieldsHolder.invalidate()
         binding.deleteButton.visibility = View.GONE
-        binding.cancelButton.setOnClickListener { b: View? -> dismiss() }
-        binding.saveButton.setOnClickListener { b: View? -> createEntry() }
+        binding.cancelButton.setOnClickListener { dismiss() }
+        binding.saveButton.setOnClickListener { createEntry() }
     }
 
     private fun generateInputs(item: Any): List<View> {
@@ -92,6 +100,15 @@ class CreateEntryDialogFragment<T>(
 
         // Handle Date EditText
         if (field.type == Date::class.java && valueView is EditText) {
+            val c = Calendar.getInstance()
+            valueView.setText(
+                String.format(
+                    Locale.GERMANY, "%d.%d.%d",
+                    c[Calendar.DAY_OF_MONTH],
+                    c[Calendar.MONTH] + 1,
+                    c[Calendar.YEAR]
+                )
+            )
             valueView.setOnClickListener {
                 val newFragment = DatePickerFragment(valueView)
                 newFragment.show(parentFragmentManager, "datePicker")

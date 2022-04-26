@@ -35,6 +35,12 @@ class DrinksAdapter(
         }
     }
 
+    fun resetAmountToZero(eventAndCustomerWithDrinksViewModel: EventAndCustomerWithDrinksViewModel, eventId: Long, customerId: Long) {
+        items.forEach {
+            eventAndCustomerWithDrinksViewModel.updateAmount(eventId, customerId, it.drink.drinkId, 0)
+        }
+    }
+
     class DrinkViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
 
@@ -57,6 +63,10 @@ class DrinksAdapter(
 
         private fun updateAmount(item: CustomerEventWithBoughtDrinks, amount: Int) {
             item.amount += amount
+
+            if(item.amount < 0)
+                item.amount = 0
+
             updateAmountDisplay(item.amount)
         }
 

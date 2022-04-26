@@ -2,10 +2,14 @@
 <resources>
     <string name="app_name">GetränkeListe</string>
     <string name="list_heading">Liste</string>
-    <string name="settings_heading">Einstellungen</string>
+    <string name="settings_heading">Verwalten</string>
     <string name="drinks_label">Getränke</string>
-    <string name="customer_label">Kunden</string>
-    <string name="event_label">Veranstaltungen</string>
+    <string name="customers_label">Kunden</string>
+    <string name="event_label">Veranstaltung</string>
+    <string name="events_label">Veranstaltungen:</string>
+    <string name="create_drink_label">Getränk anlegen</string>
+    <string name="create_customer_label">Kunde anlegen</string>
+    <string name="create_event_label">Veranstaltung anlegen</string>
     <string name="edit">Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
@@ -15,7 +19,7 @@
     <string name="create_title">Erstellen</string>
     <string name="name">Name</string>
     <string name="date">Datum</string>
-    <string name="price">Preis</string>
+    <string name="price">Preis (Cent)</string>
     <string name="chosen_event_label">Ausgewählt</string>
     <string name="delete">Löschen</string>
     <string name="total">Gesamt</string>
@@ -27,10 +31,14 @@
     <string name="welcome_message">Willkommen in der GetränkeListe, ein virtueller Bierdeckel um alle Bestellungen in einer übersichtlichen Liste zu speichern.\n\nLege Veranstaltungen an, füge Getränke &amp; Kunden hinzu und verfolge ganz einfach noch offene Beträge.\n\nIdeal für Vereine, Mannschaften und sonstige Treffen!</string>
     <string name="create_event_message">Lege jetzt deine erste Verantstaltung an!</string>
 
+    <string name="confirm_pay_title">Zahlung bestätigen</string>
+    <string name="confirm_pay_message">Wurde der volle Betrag bezahlt?\nFortfahren setzt die Bestellungen auf 0 zurück.</string>
+
     <!-- Confirm deletion dialog -->
     <string name="confirm_title">Löschen bestätigen</string>
     <string name="confirm_message">Sind sie sicher, dass sie diesen Eintrag löschen wollen?</string>
     <string name="confirm_yes">Ja</string>
     <string name="confirm_no">Nein</string>
     <string name="add_drinks_label">Getränke\nhinzufügen</string>
+    <string name="pay_button">Bezahlen</string>
 </resources>
