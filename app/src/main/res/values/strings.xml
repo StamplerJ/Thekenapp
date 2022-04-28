@@ -5,7 +5,7 @@
 
     <string name="plus_sign" translatable="false">+</string>
     <string name="minus_sign" translatable="false">-</string>
-    <string name="drinks_label">Drinks</string>
+    <string name="drinks_label">Products</string>
     <string name="customers_label">Customers</string>
     <string name="event_label">Event</string>
     <string name="events_label">Events:</string>
@@ -25,13 +25,14 @@
     <string name="customer_tag" translatable="false">CUSTOMER</string>
     <string name="event_tag" translatable="false">EVENT</string>
 
-    <string name="welcome_message_title">"Put it on my tab!"</string>
-    <string name="no_events_message">You have not created any events.\nPlease create on in the Settings tab.</string>
+    <string name="welcome_message_title">\"Put it on my tab!\"</string>
+    <string name="no_events_message">Some data is missing.\nCreate products, customers and events under the \"Manage\" tab.</string>
     <string name="welcome_message">Welcome to the DrinkingTab, a virtual tab to track your customers orders and put them on a digital tab.\n\nCreate events, add your drinks &amp; customers and easily keep track of your earning for the night.\n\nIdeal for clubs, teams und social gatherings!</string>
     <string name="create_event_message">Create your first event now!</string>
 
     <!-- Editable names -->
     <string name="name">Name</string>
+    <string name="identifier">Name</string>
     <string name="date">Date</string>
     <string name="price">Price (Cent)</string>
     <string name="chosen_event_label">Chosen</string>

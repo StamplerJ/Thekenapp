@@ -36,6 +36,21 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="8dp"
         android:textSize="16sp"
+        android:gravity="center"
+        android:maxWidth="120dp"
+        app:layout_constraintBottom_toBottomOf="@id/decrease1"
+        app:layout_constraintEnd_toStartOf="@+id/drinkAmountAdded"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/drinkName"
+        app:layout_constraintTop_toTopOf="@id/decrease1"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/drinkAmountAdded"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="8dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
         android:maxWidth="120dp"
@@ -44,7 +59,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/drinkName"
         app:layout_constraintTop_toTopOf="@id/decrease1"
-        tools:text="10" />
+        tools:text="(3)" />
 
     <Button
         android:id="@+id/increase1"

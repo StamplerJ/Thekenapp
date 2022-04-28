@@ -3,11 +3,11 @@
     <string name="app_name">GetränkeListe</string>
     <string name="list_heading">Liste</string>
     <string name="settings_heading">Verwalten</string>
-    <string name="drinks_label">Getränke</string>
+    <string name="drinks_label">Produkte</string>
     <string name="customers_label">Kunden</string>
     <string name="event_label">Veranstaltung</string>
     <string name="events_label">Veranstaltungen:</string>
-    <string name="create_drink_label">Getränk anlegen</string>
+    <string name="create_drink_label">Produkt anlegen</string>
     <string name="create_customer_label">Kunde anlegen</string>
     <string name="create_event_label">Veranstaltung anlegen</string>
     <string name="edit">Bearbeiten</string>
@@ -18,6 +18,7 @@
     <string name="edit_title">Ändern</string>
     <string name="create_title">Erstellen</string>
     <string name="name">Name</string>
+    <string name="identifier">Bezeichnung</string>
     <string name="date">Datum</string>
     <string name="price">Preis (Cent)</string>
     <string name="chosen_event_label">Ausgewählt</string>
@@ -26,9 +27,9 @@
     <string name="add">Hinzufügen</string>
     <string name="error_fill_fields">Bitte fülle alle Felder aus</string>
 
-    <string name="welcome_message_title">"Schreibs auf meinen Deckel!"</string>
-    <string name="no_events_message">Sie haben noch keine Veranstaltungen angelegt.\nBitte legen Sie welche im Einstellungsmenü an.</string>
-    <string name="welcome_message">Willkommen in der GetränkeListe, ein virtueller Bierdeckel um alle Bestellungen in einer übersichtlichen Liste zu speichern.\n\nLege Veranstaltungen an, füge Getränke &amp; Kunden hinzu und verfolge ganz einfach noch offene Beträge.\n\nIdeal für Vereine, Mannschaften und sonstige Treffen!</string>
+    <string name="welcome_message_title">\"Schreib\'s auf meinen Deckel!\"</string>
+    <string name="no_events_message">Es fehlen noch Daten.\nUnter \"Verwalten\" kannst du Produkte, Kunden und Veranstaltungen anlegen.</string>
+    <string name="welcome_message">Willkommen in der GetränkeListe, ein virtueller Bierdeckel, um alle Bestellungen in einer übersichtlichen Liste zu speichern.\n\nLege Veranstaltungen an, füge Getränke &amp; Kunden hinzu und verfolge ganz einfach noch offene Beträge.\n\nIdeal für Vereine, Mannschaften und sonstige Treffen!</string>
     <string name="create_event_message">Lege jetzt deine erste Verantstaltung an!</string>
 
     <string name="confirm_pay_title">Zahlung bestätigen</string>

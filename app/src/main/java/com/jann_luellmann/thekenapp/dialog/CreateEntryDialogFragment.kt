@@ -33,7 +33,8 @@ import java.lang.reflect.Field
 import java.util.*
 
 class CreateEntryDialogFragment<T>(
-    private val item: T
+    private val item: T,
+    private val eventId: Long = -1
 ) : DialogFragment() {
 
     private lateinit var binding: DialogFragmentEditEntryBinding
@@ -119,7 +120,6 @@ class CreateEntryDialogFragment<T>(
 
     private fun createEntry() {
         context?.let {
-            val eventId = Prefs.getCurrentEvent(it)
             when (item) {
                 is Drink -> {
                     val drink = item as Drink
@@ -165,7 +165,7 @@ class CreateEntryDialogFragment<T>(
                     }
                     CoroutineScope(Dispatchers.IO).launch {
                         val newEventId = EventViewModel().insert(event)
-                        Prefs.putCurrentEvent(it, newEventId)
+//                        Prefs.putCurrentEvent(it, newEventId)
 
                         // Update current event in MainActivity
                         if (it is MainActivity) {

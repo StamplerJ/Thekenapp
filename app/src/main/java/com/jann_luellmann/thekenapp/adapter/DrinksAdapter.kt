@@ -46,9 +46,15 @@ class DrinksAdapter(
 
         private val binding: DialogEntryDrinkBinding = DialogEntryDrinkBinding.bind(itemView)
 
+        var original: Int = 0
+        var added: Int = 0
+
         fun init(item: CustomerEventWithBoughtDrinks) {
             binding.drinkName.text = item.drink.name
-            updateAmountDisplay(item.amount)
+            original = item.amount
+
+            binding.drinkAmount.text = original.toString()
+            updateAmountAddedDisplay(added)
 
             binding.decrease1.setOnClickListener {
                 updateAmount(item, -1)
@@ -62,16 +68,17 @@ class DrinksAdapter(
         }
 
         private fun updateAmount(item: CustomerEventWithBoughtDrinks, amount: Int) {
+            if(added + amount <= 0)
+                return
+
             item.amount += amount
+            added += amount
 
-            if(item.amount < 0)
-                item.amount = 0
-
-            updateAmountDisplay(item.amount)
+            updateAmountAddedDisplay(added)
         }
 
-        private fun updateAmountDisplay(amount: Int) {
-            binding.drinkAmount.text = amount.toString()
+        private fun updateAmountAddedDisplay(amount: Int) {
+            binding.drinkAmountAdded.text = "($amount)"
         }
     }
 }

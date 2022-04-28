@@ -5,43 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.evrencoskun.tableview.TableView
-import com.jann_luellmann.thekenapp.data.db.Database
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.relationship.CustomerEventWithBoughtDrinks
-import com.jann_luellmann.thekenapp.data.repository.EventAndCustomerWithDrinksRepository
-import com.jann_luellmann.thekenapp.data.repository.EventWithDrinksAndCustomersRepository
-import com.jann_luellmann.thekenapp.data.view_model.ViewModelFactory
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventAndCustomerWithDrinksViewModel
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel
 import com.jann_luellmann.thekenapp.databinding.FragmentListBinding
 import com.jann_luellmann.thekenapp.dialog.AddDrinkDialogFragment
-import com.jann_luellmann.thekenapp.util.Prefs
 import com.jann_luellmann.thekenapp.view.*
 import java.util.*
 
-class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener {
+
+class ListFragment(
+    private val eventId: LiveData<Long>,
+    private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel,
+    private val eventAndCustomerWithDrinksViewModel: EventAndCustomerWithDrinksViewModel
+) : Fragment(), EventChangedListener, OnCustomerClickedListener {
 
     private lateinit var binding: FragmentListBinding
 
     private var adapter: ListTableViewAdapter = ListTableViewAdapter()
-
-    private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel by viewModels {
-        ViewModelFactory(
-            EventWithDrinksAndCustomersRepository(
-                Database.getInstance().eventWithDrinksAndCustomersDAO()
-            )
-        )
-    }
-
-    private val eventAndCustomerWithDrinksViewModel: EventAndCustomerWithDrinksViewModel by viewModels {
-        ViewModelFactory(
-            EventAndCustomerWithDrinksRepository(
-                Database.getInstance().eventAndCustomerWithDrinksDAO()
-            )
-        )
-    }
 
     private val rowHeaderList: MutableList<RowHeader?> = mutableListOf()
     private val columnHeaderList: MutableList<ColumnHeader?> = mutableListOf()
@@ -68,15 +52,19 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
         binding.tableView.setAdapter(adapter)
         adapter.setAllItems(columnHeaderList, rowHeaderList, cellList)
 
-        val eventId: Long = Prefs.getCurrentEvent(view.context)
-        onEventUpdated(eventId)
+        eventId.observe(viewLifecycleOwner) {
+            onEventUpdated(eventId)
+        }
 
         binding.tableView.tableViewListener = ListTableViewClickListener()
     }
 
-    override fun onEventUpdated(eventId: Long) {
-        eventWithDrinksAndCustomersViewModel.findById(eventId)
-            .observe(viewLifecycleOwner) { event ->
+    override fun onEventUpdated(updatedId: LiveData<Long>) {
+        val eventWithCustomersDrinks = Transformations.switchMap(updatedId) {
+            eventWithDrinksAndCustomersViewModel.findById(it)
+        }
+
+        eventWithCustomersDrinks.observe(viewLifecycleOwner) { event ->
                 if (event == null) {
                     binding.noEventsMessage.visibility = View.VISIBLE
                     return@observe
@@ -91,7 +79,11 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
                 columnHeaderList.add(ColumnHeader(getString(R.string.total)))
             }
 
-        eventAndCustomerWithDrinksViewModel.findAllByEvent(eventId).observe(viewLifecycleOwner) {
+        val eventAndCustomerWithDrinks = Transformations.switchMap(updatedId) {
+            eventAndCustomerWithDrinksViewModel.findAllByEvent(it)
+        }
+
+        eventAndCustomerWithDrinks.observe(viewLifecycleOwner) {
             rowHeaderList.clear()
             cellList.clear()
             setData(it)
@@ -111,15 +103,18 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
                 val row: MutableList<Cell> = mutableListOf()
 
                 entry.sortedBy { it.drink.name }.forEachIndexed { index, it ->
-                    sum += it.amount * it.drink.price
-                    row.add(
-                        Cell(
-                            if (columnHeaderList[index]?.data.toString() == it.drink.toString())
-                                it.amount
-                            else
-                                "WRONG"
+                    if (index < columnHeaderList.size) {
+                        sum += it.amount * it.drink.price
+                        row.add(
+                            Cell(
+
+                                if (columnHeaderList[index]?.data.toString() == it.drink.toString())
+                                    it.amount
+                                else
+                                    "WRONG"
+                            )
                         )
-                    )
+                    }
                 }
                 total += sum
                 row.add(Cell(String.format(Locale.GERMAN, "%.2f€", sum / 100f)))
@@ -139,13 +134,14 @@ class ListFragment : Fragment(), EventChangedListener, OnCustomerClickedListener
 
     override fun onCustomerClicked(customer: Customer) {
         context?.let {
-            val eventId = Prefs.getCurrentEvent(it)
-            val dialog = AddDrinkDialogFragment(
-                eventAndCustomerWithDrinksViewModel,
-                eventId,
-                customer.customerId
-            )
-            dialog.show(parentFragmentManager, "AddDrink")
+            eventId.observe(viewLifecycleOwner) {
+                val dialog = AddDrinkDialogFragment(
+                    eventAndCustomerWithDrinksViewModel,
+                    it,
+                    customer.customerId
+                )
+                dialog.show(parentFragmentManager, "AddDrink")
+            }
         }
     }
 }

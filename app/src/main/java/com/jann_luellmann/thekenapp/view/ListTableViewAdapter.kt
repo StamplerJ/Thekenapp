@@ -33,8 +33,8 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         viewHolder.cellTextview.text = cellItemModel!!.data.toString()
 
         // Resize
-        viewHolder.cellContainer.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
-        viewHolder.cellTextview.requestLayout()
+//        viewHolder.cellContainer.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+//        viewHolder.cellTextview.requestLayout()
     }
 
     override fun onCreateColumnHeaderViewHolder(
@@ -57,10 +57,8 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         // Resize
         tableView?.let {
             val layoutParams = columnHeaderViewHolder.columnHeaderContainer.layoutParams
-            val tableWidth = it.measuredWidth - Util.convertDpToPixel(
-                columnHeaderViewHolder.columnHeaderContainer.context.resources.getDimension(R.dimen.row_header_width),
-                columnHeaderViewHolder.columnHeaderContainer.context
-            )
+            val width = it.context.resources.displayMetrics.widthPixels
+            val tableWidth = width - Util.convertDpToPixel(columnHeaderViewHolder.columnHeaderContainer.context.resources.getDimension(R.dimen.row_header_width), it.context)
             layoutParams.width = tableWidth / mColumnHeaderItems.size
             columnHeaderViewHolder.columnHeaderContainer.layoutParams = layoutParams
         }

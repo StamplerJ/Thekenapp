@@ -13,7 +13,7 @@ class Drink(
     var drinkId: Long = 0,
 
     @ColumnInfo(name = "dname")
-    @field:Editable(stringId = R.string.name)
+    @field:Editable(stringId = R.string.identifier)
     var name: String = "",
 
     @ColumnInfo(name = "price")

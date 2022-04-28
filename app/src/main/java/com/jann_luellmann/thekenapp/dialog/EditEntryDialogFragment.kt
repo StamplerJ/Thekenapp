@@ -32,7 +32,8 @@ import java.lang.reflect.Field
 import java.util.*
 
 class EditEntryDialogFragment(
-    private var item: Any
+    private var item: Any,
+    private val eventId: Long = -1
 ) : DialogFragment() {
 
     private lateinit var binding: DialogFragmentEditEntryBinding
@@ -132,7 +133,7 @@ class EditEntryDialogFragment(
                         drink.name = TextUtil.FirstLetterUpperCase(name)
                     }
                     "price" -> {
-                        val price = (entry.value as EditText).text.toString().toLong()
+                        val price = entry.value.text.toString().toLong()
                         drink.price = price
                     }
                 }
@@ -147,7 +148,7 @@ class EditEntryDialogFragment(
                     return
                 }
                 if ("name" == entry.name) {
-                    val name = (entry.value as EditText).text.toString()
+                    val name = entry.value.text.toString()
                     customer.name = TextUtil.FirstLetterUpperCase(name)
                 }
             }
@@ -175,7 +176,6 @@ class EditEntryDialogFragment(
 
     private fun deleteEntry() {
         context?.let {
-            val eventId = Prefs.getCurrentEvent(it)
             when (item) {
                 is Drink -> {
                     EventWithDrinksViewModel().delete(eventId, item as Drink)

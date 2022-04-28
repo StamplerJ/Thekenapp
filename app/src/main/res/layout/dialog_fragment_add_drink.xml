@@ -29,10 +29,11 @@
         app:layout_constraintStart_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.jann_luellmann.thekenapp.util.MaxHeightRecyclerView
         android:id="@+id/drinksRecyclerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:maxHeight="450dp"
         android:layout_marginHorizontal="8dp"
         android:layout_marginVertical="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

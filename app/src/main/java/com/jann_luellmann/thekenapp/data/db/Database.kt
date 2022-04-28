@@ -42,30 +42,29 @@ class Database private constructor(context: Context) {
                 runInTransaction {
                     clearAllTables()
                     eventDAO().insertAll(
-                        Event(1L, "Schützenfest 1. Tag", Date(), 0),
-                        Event(2L, "Schützenfest 2. Tag", Date(), 0)
+                        Event(1L, "Jahreshauptversammlung", GregorianCalendar(2022, Calendar.MAY, 1).time, 0),
                     )
                     customerDAO().insertAll(
-                        Customer(1L, "Jana Körner"),
+                        Customer(1L, "Jana Sander"),
                         Customer(2L, "Joachim Sander"),
-                        Customer(3L, "Jann Lüllmann"),
-                        Customer(4L, "Malte Sander und seine Freundin Nadine"),
+                        Customer(3L, "Thorsten Fischer"),
+                        Customer(4L, "Malte Sander"),
                         Customer(5L, "Marc Müller"),
                         Customer(6L, "Pascal Wittenberg"),
-                        Customer(7L, "Tim Tom"),
-                        Customer(8L, "Marie Lindemann"),
-                        Customer(9L, "Heinz-Hermann Hansemann Sen.")
+                        Customer(7L, "Alf Remke"),
+                        Customer(8L, "Bernd Gerke"),
+                        Customer(9L, "Heinz-Hermann Hansemann"),
+                        Customer(10L, "Siegfried Böhm"),
+                        Customer(11L, "Ralf Böhm"),
+                        Customer(12L, "Kai Wesemann"),
                     )
                     drinkDAO().insertAllBlocking(
                         Drink(1L, "Wasser", 100),
                         Drink(2L, "Bier, Alster", 150),
                         Drink(3L, "Cola, Fanta, Sprite", 120),
-                        Drink(4L, "Barcadi Cola", 300),
-                        Drink(5L, "Cocktail", 250),
-                        Drink(6L, "Hugo", 200),
-                        Drink(7L, "Cocktail", 250),
-                        Drink(8L, "Charly, Cola-Korn", 250),
-                        Drink(9L, "Charly, Cola-Korn", 300)
+                        Drink(4L, "Bacardi Cola", 300),
+                        Drink(5L, "Korn, Rot, Grün", 150),
+                        Drink(6L, "Charly, Cola-Korn", 250),
                     )
                     eventDrinkCrossDAO().insertAll(
                         EventDrinkCrossRef(1L, 1L),
@@ -73,10 +72,7 @@ class Database private constructor(context: Context) {
                         EventDrinkCrossRef(1L, 3L),
                         EventDrinkCrossRef(1L, 4L),
                         EventDrinkCrossRef(1L, 5L),
-                        EventDrinkCrossRef(2L, 1L),
-                        EventDrinkCrossRef(2L, 2L),
-                        EventDrinkCrossRef(2L, 3L),
-                        EventDrinkCrossRef(2L, 5L)
+                        EventDrinkCrossRef(1L, 6L),
                     )
                     eventCustomerCrossDAO().insertAll(
                         EventCustomerCrossRef(1L, 1L),
@@ -84,38 +80,27 @@ class Database private constructor(context: Context) {
                         EventCustomerCrossRef(1L, 3L),
                         EventCustomerCrossRef(1L, 4L),
                         EventCustomerCrossRef(1L, 5L),
-                        EventCustomerCrossRef(2L, 6L),
-                        EventCustomerCrossRef(2L, 7L),
-                        EventCustomerCrossRef(2L, 1L),
-                        EventCustomerCrossRef(2L, 2L)
+                        EventCustomerCrossRef(1L, 6L),
+                        EventCustomerCrossRef(1L, 7L),
+                        EventCustomerCrossRef(1L, 8L),
+                        EventCustomerCrossRef(1L, 9L),
+                        EventCustomerCrossRef(1L, 10L),
+                        EventCustomerCrossRef(1L, 11L),
+                        EventCustomerCrossRef(1L, 12L),
                     )
-                    eventAndCustomerWithDrinksDAO().insertAll(
-                        EventCustomerDrinkCrossRef(1L, 1L, 1L, 1),
-                        EventCustomerDrinkCrossRef(1L, 1L, 2L, 11),
-                        EventCustomerDrinkCrossRef(1L, 1L, 3L, 12),
-                        EventCustomerDrinkCrossRef(1L, 1L, 4L, 13),
-                        EventCustomerDrinkCrossRef(1L, 1L, 5L, 14),
-                        EventCustomerDrinkCrossRef(1L, 2L, 1L, 1),
-                        EventCustomerDrinkCrossRef(1L, 2L, 2L, 11),
-                        EventCustomerDrinkCrossRef(1L, 2L, 3L, 12),
-                        EventCustomerDrinkCrossRef(1L, 2L, 4L, 13),
-                        EventCustomerDrinkCrossRef(1L, 2L, 5L, 14),
-                        EventCustomerDrinkCrossRef(1L, 3L, 1L, 1),
-                        EventCustomerDrinkCrossRef(1L, 3L, 2L, 11),
-                        EventCustomerDrinkCrossRef(1L, 3L, 3L, 12),
-                        EventCustomerDrinkCrossRef(1L, 3L, 4L, 13),
-                        EventCustomerDrinkCrossRef(1L, 3L, 5L, 14),
-                        EventCustomerDrinkCrossRef(1L, 4L, 1L, 1),
-                        EventCustomerDrinkCrossRef(1L, 4L, 2L, 11),
-                        EventCustomerDrinkCrossRef(1L, 4L, 3L, 12),
-                        EventCustomerDrinkCrossRef(1L, 4L, 4L, 13),
-                        EventCustomerDrinkCrossRef(1L, 4L, 5L, 14),
-                        EventCustomerDrinkCrossRef(1L, 5L, 1L, 1),
-                        EventCustomerDrinkCrossRef(1L, 5L, 2L, 11),
-                        EventCustomerDrinkCrossRef(1L, 5L, 3L, 12),
-                        EventCustomerDrinkCrossRef(1L, 5L, 4L, 13),
-                        EventCustomerDrinkCrossRef(1L, 5L, 5L, 14)
-                    )
+                    val list = mutableListOf<EventCustomerDrinkCrossRef>().apply {
+                        for (i in 1L..12L) {
+                            add(EventCustomerDrinkCrossRef(1L, i, 1L, 0))
+                            add(EventCustomerDrinkCrossRef(1L, i, 2L, 0))
+                            add(EventCustomerDrinkCrossRef(1L, i, 3L, 0))
+                            add(EventCustomerDrinkCrossRef(1L, i, 4L, 0))
+                            add(EventCustomerDrinkCrossRef(1L, i, 5L, 0))
+                            add(EventCustomerDrinkCrossRef(1L, i, 6L, 0))
+                        }
+                    }
+                    list.forEach {
+                        eventAndCustomerWithDrinksDAO().insert(it)
+                    }
                 }
             }
         }
@@ -123,6 +108,7 @@ class Database private constructor(context: Context) {
 
     companion object {
         private var instance: AppDatabase? = null
+
         fun initialize(context: Context) {
             Database(context)
         }
@@ -135,9 +121,9 @@ class Database private constructor(context: Context) {
 
     init {
 //        TODO: For development:
-//      context.applicationContext.deleteDatabase("thekenapp-db")
+        context.applicationContext.deleteDatabase("thekenapp-db")
         instance = Room.databaseBuilder(context, AppDatabase::class.java, "thekenapp-db").build()
 //        TODO: For development:
-//      populateInitialData()
+        populateInitialData()
     }
 }

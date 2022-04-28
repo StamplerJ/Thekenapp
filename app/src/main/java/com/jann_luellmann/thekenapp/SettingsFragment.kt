@@ -5,37 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jann_luellmann.thekenapp.adapter.TextAdapter
-import com.jann_luellmann.thekenapp.data.db.Database
 import com.jann_luellmann.thekenapp.data.model.Customer
 import com.jann_luellmann.thekenapp.data.model.Drink
 import com.jann_luellmann.thekenapp.data.model.Event
 import com.jann_luellmann.thekenapp.data.model.relationship.EventWithDrinksAndCustomers
-import com.jann_luellmann.thekenapp.data.repository.EventWithDrinksAndCustomersRepository
 import com.jann_luellmann.thekenapp.data.view_model.EventViewModel
-import com.jann_luellmann.thekenapp.data.view_model.ViewModelFactory
 import com.jann_luellmann.thekenapp.data.view_model.relationship.EventWithDrinksAndCustomersViewModel
 import com.jann_luellmann.thekenapp.databinding.FragmentSettingsBinding
 import com.jann_luellmann.thekenapp.dialog.CreateEntryDialogFragment
-import com.jann_luellmann.thekenapp.util.Prefs
 
-class SettingsFragment : Fragment(), EventChangedListener {
+class SettingsFragment(
+    private val eventId: LiveData<Long>,
+    private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel
+) : Fragment(), EventChangedListener {
 
     private lateinit var binding: FragmentSettingsBinding
-    private var eventViewModel: EventViewModel? = null
-    private val eventWithDrinksAndCustomersViewModel: EventWithDrinksAndCustomersViewModel by viewModels {
-        ViewModelFactory(
-            EventWithDrinksAndCustomersRepository(
-                Database.getInstance().eventWithDrinksAndCustomersDAO()
-            )
-        )
-    }
-    private var observableData: LiveData<EventWithDrinksAndCustomers>? = null
 
     private lateinit var drinksAdapter: TextAdapter<Drink>
     private lateinit var customersAdapter: TextAdapter<Customer>
@@ -60,33 +50,35 @@ class SettingsFragment : Fragment(), EventChangedListener {
         setupRecyclerView(binding.drinksList, drinksAdapter, true)
         setupRecyclerView(binding.customerList, customersAdapter, true)
 
-        binding.addDrink.setOnClickListener {
-            CreateEntryDialogFragment(Drink()).show(
-                parentFragmentManager,
-                getString(R.string.drink_tag)
-            )
-        }
-        binding.addCustomer.setOnClickListener {
-            CreateEntryDialogFragment(
-                Customer()
-            ).show(parentFragmentManager, getString(R.string.customer_tag))
-        }
         binding.addEvent.setOnClickListener {
             CreateEntryDialogFragment(Event()).show(
                 parentFragmentManager,
                 getString(R.string.event_tag)
             )
         }
-        val eventId: Long = Prefs.getCurrentEvent(view.context)
-        onEventUpdated(eventId)
+
+        eventId.observe(viewLifecycleOwner) {
+            binding.addDrink.setOnClickListener { _ ->
+                CreateEntryDialogFragment(Drink(), it).show(
+                    parentFragmentManager,
+                    getString(R.string.drink_tag)
+                )
+            }
+            binding.addCustomer.setOnClickListener { _ ->
+                CreateEntryDialogFragment(Customer(), it).show(
+                    parentFragmentManager,
+                    getString(R.string.customer_tag)
+                )
+            }
+
+            onEventUpdated(eventId)
+        }
 
         // Event setup
-        eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
-        eventViewModel?.findAll()?.observe(viewLifecycleOwner) { events ->
-            setupRecyclerView(
-                binding.eventList, eventsAdapter, true
-            )
-            eventsAdapter.setData(events)
+        setupRecyclerView(binding.eventList, eventsAdapter, true)
+        val eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+        eventViewModel.findAll().observe(viewLifecycleOwner) { events ->
+            eventsAdapter.setData(events.sortedBy { it.name })
         }
     }
 
@@ -102,24 +94,22 @@ class SettingsFragment : Fragment(), EventChangedListener {
         recyclerView.adapter = adapter
     }
 
-    override fun onEventUpdated(eventId: Long) {
-        observableData?.let {
-            if (it.hasObservers())
-                it.removeObservers(this)
+    override fun onEventUpdated(updatedId: LiveData<Long>) {
+        val eventWithDrinksAndCustomers = Transformations.switchMap(updatedId) {
+            eventWithDrinksAndCustomersViewModel.findById(it)
         }
 
-        eventWithDrinksAndCustomersViewModel.findById(eventId)
-            .observe(viewLifecycleOwner) { event: EventWithDrinksAndCustomers? ->
+        eventWithDrinksAndCustomers.observe(viewLifecycleOwner) { event: EventWithDrinksAndCustomers? ->
 
-                binding.addDrink.isEnabled = event != null
-                binding.addCustomer.isEnabled = event != null
+            binding.addDrink.isEnabled = event != null
+            binding.addCustomer.isEnabled = event != null
 
-                if (event == null)
-                    return@observe
+            if (event == null)
+                return@observe
 
-                event.customers.sort()
-                drinksAdapter.setData(event.drinks)
-                customersAdapter.setData(event.customers)
-            }
+            event.customers.sort()
+            drinksAdapter.setData(event.drinks.sortedBy { it.name })
+            customersAdapter.setData(event.customers.sortedBy { it.name })
+        }
     }
 }
