@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rowHeaderContainer"
+    android:id="@+id/cell_container"
     android:layout_width="@dimen/row_header_width"
     android:layout_height="@dimen/cell_height"
     android:background="@color/cell_background_color">

@@ -25,7 +25,7 @@ class ListFragment(
 
     private lateinit var binding: FragmentListBinding
 
-    private var adapter: ListTableViewAdapter = ListTableViewAdapter()
+    private lateinit var adapter: ListTableViewAdapter
 
     private val rowHeaderList: MutableList<RowHeader?> = mutableListOf()
     private val columnHeaderList: MutableList<ColumnHeader?> = mutableListOf()
@@ -41,6 +41,8 @@ class ListFragment(
 
         binding.tableView.isIgnoreSelectionColors = true
         binding.tableView.setHasFixedWidth(false)
+
+        adapter = ListTableViewAdapter()
         adapter.tableView = binding.tableView
 
         return view
@@ -65,19 +67,20 @@ class ListFragment(
         }
 
         eventWithCustomersDrinks.observe(viewLifecycleOwner) { event ->
-                if (event == null) {
-                    binding.noEventsMessage.visibility = View.VISIBLE
-                    return@observe
-                }
-
-                binding.noEventsMessage.visibility = View.GONE
-
-                columnHeaderList.clear()
-                event.drinks.sortedBy { it.name }.forEach {
-                    columnHeaderList.add(ColumnHeader(it.toString()))
-                }
-                columnHeaderList.add(ColumnHeader(getString(R.string.total)))
+            if (event == null) {
+                binding.noEventsMessage.visibility = View.VISIBLE
+                return@observe
             }
+
+            binding.noEventsMessage.visibility = View.GONE
+
+            columnHeaderList.clear()
+            event.drinks.sortedBy { it.name }.forEach {
+                columnHeaderList.add(ColumnHeader(it.toString()))
+            }
+            columnHeaderList.add(ColumnHeader(getString(R.string.total)))
+            adapter.setColumnHeaderItems(columnHeaderList)
+        }
 
         val eventAndCustomerWithDrinks = Transformations.switchMap(updatedId) {
             eventAndCustomerWithDrinksViewModel.findAllByEvent(it)
@@ -87,8 +90,8 @@ class ListFragment(
             rowHeaderList.clear()
             cellList.clear()
             setData(it)
-            adapter.setAllItems(columnHeaderList, rowHeaderList, cellList)
-            adapter.notifyDataSetChanged()
+            adapter.setRowHeaderItems(rowHeaderList)
+            adapter.setCellItems(cellList)
         }
     }
 

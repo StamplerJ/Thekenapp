@@ -2,8 +2,10 @@
 <resources>
     <dimen name="row_header_width">140dp</dimen>
     <dimen name="column_header_height">60dp</dimen>
+    <dimen name="column_header_min_width">60dp</dimen>
     <dimen name="cell_height">60dp</dimen>
     <dimen name="text_size">14sp</dimen>
+
 
     <!-- Overriding the default values of the tableView -->
     <dimen name="default_row_header_width">140dp</dimen>

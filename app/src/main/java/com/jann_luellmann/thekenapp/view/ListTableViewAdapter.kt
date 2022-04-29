@@ -3,7 +3,6 @@ package com.jann_luellmann.thekenapp.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.evrencoskun.tableview.TableView
@@ -16,6 +15,8 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
 
     var tableView: TableView? = null
     private var rowHeadWidth = 0
+
+    private val resizableViewHolders: MutableList<BaseViewHolder> = mutableListOf()
 
     override fun onCreateCellViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder {
         val layout: View = LayoutInflater.from(parent.context)
@@ -31,10 +32,6 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     ) {
         val viewHolder = holder as CellViewHolder
         viewHolder.cellTextview.text = cellItemModel!!.data.toString()
-
-        // Resize
-//        viewHolder.cellContainer.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
-//        viewHolder.cellTextview.requestLayout()
     }
 
     override fun onCreateColumnHeaderViewHolder(
@@ -43,7 +40,9 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     ): AbstractViewHolder {
         val layout: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.table_view_column_header_layout, parent, false)
-        return ColumnHeaderViewHolder(layout)
+        val viewHolder = ColumnHeaderViewHolder(layout)
+        resizableViewHolders.add(viewHolder)
+        return viewHolder
     }
 
     override fun onBindColumnHeaderViewHolder(
@@ -53,15 +52,6 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
     ) {
         val columnHeaderViewHolder = holder as ColumnHeaderViewHolder
         columnHeaderViewHolder.columnHeaderTextView.text = columnHeaderItemModel!!.data.toString()
-
-        // Resize
-        tableView?.let {
-            val layoutParams = columnHeaderViewHolder.columnHeaderContainer.layoutParams
-            val width = it.context.resources.displayMetrics.widthPixels
-            val tableWidth = width - Util.convertDpToPixel(columnHeaderViewHolder.columnHeaderContainer.context.resources.getDimension(R.dimen.row_header_width), it.context)
-            layoutParams.width = tableWidth / mColumnHeaderItems.size
-            columnHeaderViewHolder.columnHeaderContainer.layoutParams = layoutParams
-        }
     }
 
     override fun onCreateRowHeaderViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder {
@@ -87,10 +77,10 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         rowHeaderItemModel?.let {
             if (holder is RowHeaderViewHolder) {
                 holder.bind(rowHeaderItemModel)
-                rowHeadWidth = holder.rowHeaderContainer.layoutParams.width
+                rowHeadWidth = holder.cellContainer.layoutParams.width
             } else if (holder is RowHeaderCustomerViewHolder) {
                 holder.bind(it)
-                rowHeadWidth = holder.rowHeaderContainer.layoutParams.width
+                rowHeadWidth = holder.cellContainer.layoutParams.width
             }
         }
     }
@@ -115,19 +105,19 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         return 0
     }
 
-    internal inner class CellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-        val cellContainer: LinearLayout = itemView.findViewById(R.id.cell_container)
+    internal open inner class BaseViewHolder(itemView: View) : AbstractViewHolder(itemView) {
+        val cellContainer: ConstraintLayout = itemView.findViewById(R.id.cell_container)
+    }
+
+    internal inner class CellViewHolder(itemView: View) : BaseViewHolder(itemView) {
         val cellTextview: TextView = itemView.findViewById(R.id.cell_data)
     }
 
-    internal inner class ColumnHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-        val columnHeaderContainer: ConstraintLayout =
-            itemView.findViewById(R.id.column_header_container)
+    internal inner class ColumnHeaderViewHolder(itemView: View) : BaseViewHolder(itemView) {
         val columnHeaderTextView: TextView = itemView.findViewById(R.id.column_header_textView)
     }
 
-    internal inner class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-        val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.rowHeaderContainer)
+    internal inner class RowHeaderViewHolder(itemView: View) : BaseViewHolder(itemView) {
         private val rowHeaderTextView: TextView = itemView.findViewById(R.id.rowHeaderTextView)
 
         fun bind(rowHeaderItemModel: RowHeader) {
@@ -135,9 +125,7 @@ class ListTableViewAdapter : AbstractTableAdapter<ColumnHeader?, RowHeader?, Cel
         }
     }
 
-    internal inner class RowHeaderCustomerViewHolder(itemView: View) :
-        AbstractViewHolder(itemView) {
-        val rowHeaderContainer: ConstraintLayout = itemView.findViewById(R.id.rowHeaderContainer)
+    internal inner class RowHeaderCustomerViewHolder(itemView: View) : BaseViewHolder(itemView) {
         private val rowHeaderButton: TextView = itemView.findViewById(R.id.rowHeaderButton)
 
         fun bind(rowHeaderItemModel: RowHeader) {
